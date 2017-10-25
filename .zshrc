@@ -4,9 +4,7 @@ if [[ ! -d ~/.zplug ]]; then
   source ~/.zplug/init.zsh && zplug update --self
 fi
 
-
-#Start Radu
-# TMUX
+# check if lauched it GUI terminal, if so start TMUX automatically
 if [[ -n "$KONSOLE" ]] ;then
     if which tmux >/dev/null 2>&1; then
         # if no session is started, start a new session
@@ -19,11 +17,14 @@ if [[ -n "$KONSOLE" ]] ;then
     fi
 fi
 
+# Composer path
 export PATH=$PATH:~/.local/bin
 
+# Node Version manager for managing node versions
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
 
+# SSH agemt initalization
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 
 #SSH Reagent (http://tychoish.com/post/9-awesome-ssh-tricks/)
@@ -47,32 +48,41 @@ setopt RM_STAR_WAIT
 setopt interactivecomments
 
 # Zsh has a spelling corrector
-#setopt CORRECT
+setopt CORRECT
 
+# Set our username so the prompt hides it
 DEFAULT_USER=`whoami`
 
 XDG_CONFIG_HOME=~/.config/powerline
 
+#Make the goddamn home & end keys work
 bindkey "${terminfo[khome]}" beginning-of-line
 bindkey "${terminfo[kend]}" end-of-line
-#End Radu
 
+# zstyle :incremental list yes
+# autoload -U incremental-complete-word
+# zle -N incremental-complete-word
+# bindkey '^X' incremental-complete-word
 
-# Essential
+# Essential for zplug
 source ~/.zplug/init.zsh
 
 # Make sure to use double quotes to prevent shell expansion
-zplug "zsh-users/zsh-syntax-highlighting"
 zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme
 
+# Use everything for oh-my-zsh for now, because we <3 it!
 for LIB in bzr clipboard compfix completion correction diagnostics directories functions git grep history key-bindings misc nvm prompt_info_functions spectrum termsupport theme-and-appearance
 do
     zplug "lib/${LIB}", from:oh-my-zsh
 done;
-# zplug 'junegunn/fzf-bin', as:command, rename-to:fzf
-# zplug 'junegunn/fzf', use:"shell/*"
-zplug 'junegunn/fzf', as:command, use:'{bin/fzf,shell/*}', depth:1, hook-build:'./install --key-bindings --completion --update-rc --64 --no-bash --no-fish'
-# Add a bunch more of your favorite packages!
+
+# True men compile their fzf plugin
+zplug 'junegunn/fzf', depth:1, hook-build:'./install --key-bindings --completion --no-update-rc --64 --no-bash --no-fish'
+# Fish shell like autosuggestions
+zplug "zsh-users/zsh-autosuggestions"
+# zplug 'hchbaw/auto-fu.zsh'
+zplug "zuxfoucault/colored-man-pages_mod"
+zplug "zsh-users/zsh-syntax-highlighting"
 
 # Install packages that have not been installed yet
 if ! zplug check --verbose; then
@@ -85,3 +95,36 @@ if ! zplug check --verbose; then
 fi
 
 zplug load
+
+# Because fzf likes to make a file in the home directory, enable it manually here
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+#Enable Asynchronous Mode for suggestions
+ZSH_AUSOSUGGEST_USE_ASYNC=true
+
+# Override oh-my-zsh history size
+HISTSIZE=100000
+SAVEHIST=100000
+
+# zle-line-init () {auto-fu-init;}; zle -N zle-line-init
+# zstyle ':completion:*' completer _oldlist _complete
+# zle -N zle-keymap-select auto-fu-zle-keymap-select
+# A=$HOME/.zplug/repos/hchbaw/auto-fu.zsh/auto-fu.zsh; (zsh -c "source $A ; auto-fu-zcompile $A ~/.zsh")
+# source ~/.zsh/auto-fu; auto-fu-install
+
+LS_COLORS=$(ls_colors_generator)
+
+run_ls() {
+	ls-i --color=auto -w $(tput cols) "$@"
+}
+
+run_dir() {
+	dir-i --color=auto -w $(tput cols) "$@"
+}
+
+run_vdir() {
+	vdir-i --color=auto -w $(tput cols) "$@"
+}
+alias ls="run_ls"
+alias dir="run_dir"
+alias vdir="run_vdir"
