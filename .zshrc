@@ -23,8 +23,9 @@ export PATH=$PATH:~/.local/bin
 # Node Version manager for managing node versions
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# SSH agemt initalization
+# TODO: Find a more reliable way of dealing with SSH agent
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 
 #SSH Reagent (http://tychoish.com/post/9-awesome-ssh-tricks/)
@@ -59,6 +60,7 @@ XDG_CONFIG_HOME=~/.config/powerline
 bindkey "${terminfo[khome]}" beginning-of-line
 bindkey "${terminfo[kend]}" end-of-line
 
+# This messes up highlight
 # zstyle :incremental list yes
 # autoload -U incremental-complete-word
 # zle -N incremental-complete-word
@@ -67,7 +69,8 @@ bindkey "${terminfo[kend]}" end-of-line
 # Essential for zplug
 source ~/.zplug/init.zsh
 
-# Make sure to use double quotes to prevent shell expansion
+# Make sure to use double quotes to prevent shell expansioni
+# TODO: Customize the theme already!
 zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme
 
 # Use everything for oh-my-zsh for now, because we <3 it!
@@ -82,6 +85,7 @@ zplug 'junegunn/fzf', depth:1, hook-build:'./install --key-bindings --completion
 zplug "zsh-users/zsh-autosuggestions"
 # zplug 'hchbaw/auto-fu.zsh'
 zplug "zuxfoucault/colored-man-pages_mod"
+# zplug "arzzen/calc.plugin.zsh"
 zplug "zsh-users/zsh-syntax-highlighting"
 
 # Install packages that have not been installed yet
@@ -94,7 +98,7 @@ if ! zplug check --verbose; then
     fi
 fi
 
-zplug load
+zplug load --verbose
 
 # Because fzf likes to make a file in the home directory, enable it manually here
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -106,25 +110,42 @@ ZSH_AUSOSUGGEST_USE_ASYNC=true
 HISTSIZE=100000
 SAVEHIST=100000
 
+#Stop using pushd like a crazy person
+unsetopt auto_pushd
+
+# Unfortunatley the below config for auto-fu messes up syntax highliting & suggestions
+# until I find a way keep it commented
+#
 # zle-line-init () {auto-fu-init;}; zle -N zle-line-init
 # zstyle ':completion:*' completer _oldlist _complete
 # zle -N zle-keymap-select auto-fu-zle-keymap-select
 # A=$HOME/.zplug/repos/hchbaw/auto-fu.zsh/auto-fu.zsh; (zsh -c "source $A ; auto-fu-zcompile $A ~/.zsh")
 # source ~/.zsh/auto-fu; auto-fu-install
 
+# Use even-better-ls like a B0$$
+
 LS_COLORS=$(ls_colors_generator)
 
 run_ls() {
-	ls-i --color=auto -w $(tput cols) "$@"
+    ls-i --color=auto -w $(tput cols) "$@"
 }
 
 run_dir() {
-	dir-i --color=auto -w $(tput cols) "$@"
+    dir-i --color=auto -w $(tput cols) "$@"
 }
 
 run_vdir() {
-	vdir-i --color=auto -w $(tput cols) "$@"
+    vdir-i --color=auto -w $(tput cols) "$@"
 }
+
+##################################Aliases######################################
+
 alias ls="run_ls"
 alias dir="run_dir"
 alias vdir="run_vdir"
+
+#Copy to clipboard
+alias xc="xclip -selection c"
+
+#Paste from clipboard
+alias xp="xclip -selection clipboard -o"
