@@ -44,10 +44,6 @@ ssh-reagent () {
 #if you do a 'rm *', Zsh will give you a sanity check!
 setopt RM_STAR_WAIT
 
-#allows you to type Bash style comments on your command line
-#good 'ol bash
-setopt interactivecomments
-
 # Zsh has a spelling corrector
 setopt CORRECT
 
@@ -55,10 +51,6 @@ setopt CORRECT
 DEFAULT_USER=`whoami`
 
 XDG_CONFIG_HOME=~/.config/powerline
-
-#Make the goddamn home & end keys work
-bindkey "${terminfo[khome]}" beginning-of-line
-bindkey "${terminfo[kend]}" end-of-line
 
 # This messes up highlight
 # zstyle :incremental list yes
@@ -69,12 +61,14 @@ bindkey "${terminfo[kend]}" end-of-line
 # Essential for zplug
 source ~/.zplug/init.zsh
 
+##################################zsh plugins######################################
+
 # Make sure to use double quotes to prevent shell expansioni
 # TODO: Customize the theme already!
 zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme
 
-# Use everything for oh-my-zsh for now, because we <3 it!
-for LIB in bzr clipboard compfix completion correction diagnostics directories functions git grep history key-bindings misc nvm prompt_info_functions spectrum termsupport theme-and-appearance
+# Use oh my zsh defaults because we <3 it!
+for LIB in compfix completion correction diagnostics directories functions git grep history key-bindings misc nvm prompt_info_functions spectrum termsupport theme-and-appearance
 do
     zplug "lib/${LIB}", from:oh-my-zsh
 done;
@@ -85,8 +79,12 @@ zplug 'junegunn/fzf', depth:1, hook-build:'./install --key-bindings --completion
 zplug "zsh-users/zsh-autosuggestions"
 # zplug 'hchbaw/auto-fu.zsh'
 zplug "zuxfoucault/colored-man-pages_mod"
-# zplug "arzzen/calc.plugin.zsh"
+zplug "arzzen/calc.plugin.zsh"
 zplug "zsh-users/zsh-syntax-highlighting"
+
+##################################plugins for others######################################
+
+zplug "tmux-plugins/tpm"
 
 # Install packages that have not been installed yet
 if ! zplug check --verbose; then
@@ -98,7 +96,7 @@ if ! zplug check --verbose; then
     fi
 fi
 
-zplug load --verbose
+zplug load
 
 # Because fzf likes to make a file in the home directory, enable it manually here
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -110,8 +108,13 @@ ZSH_AUSOSUGGEST_USE_ASYNC=true
 HISTSIZE=100000
 SAVEHIST=100000
 
-#Stop using pushd like a crazy person
+# Stop using pushd like a crazy person
 unsetopt auto_pushd
+
+# The future is here! Intelgent Ag
+if which ag &> /dev/null; then
+    alias afind="ag -il"
+fi
 
 # Unfortunatley the below config for auto-fu messes up syntax highliting & suggestions
 # until I find a way keep it commented
