@@ -1,3 +1,4 @@
+# Make sure you have gawk installed otherwise zplug insall will fail
 # Check if zplug is installed
 if [[ ! -d ~/.zplug ]]; then
   git clone https://github.com/zplug/zplug ~/.zplug
@@ -18,7 +19,7 @@ if [[ -n "$KONSOLE" ]] ;then
 fi
 
 # Composer path
-export PATH=$PATH:~/.local/bin
+export PATH="$PATH:$HOME/.local/bin:/opt/mssql-tools/bin:$HOME/.composer/vendor/bin"
 
 # Node Version manager for managing node versions
 export NVM_DIR="$HOME/.nvm"
@@ -51,6 +52,14 @@ setopt CORRECT
 DEFAULT_USER=`whoami`
 
 XDG_CONFIG_HOME=~/.config/powerline
+POWERLEVEL9K_MODE='nerdfont-complete'
+POWERLEVEL9K_SHORTEN_DIR_LENGTH=1
+POWERLEVEL9K_SHORTEN_DELIMITER=""
+POWERLEVEL9K_SHORTEN_STRATEGY="truncate_from_right"
+
+zstyle :omz:plugins:ssh-agent agent-forwarding on
+zstyle :omz:plugins:ssh-agent identities id_rsa
+
 
 # This messes up highlight
 # zstyle :incremental list yes
@@ -63,23 +72,25 @@ source ~/.zplug/init.zsh
 
 ##################################zsh plugins######################################
 
+zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 # Make sure to use double quotes to prevent shell expansioni
 # TODO: Customize the theme already!
 zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme
 
 # Use oh my zsh defaults because we <3 it!
-for LIB in compfix completion correction diagnostics directories functions git grep history key-bindings misc nvm prompt_info_functions spectrum termsupport theme-and-appearance
+for LIB in compfix completion correction diagnostics directories functions git grep history key-bindings misc nvm prompt_info_functions spectrum termsupport theme-and-appearance ssh-agent kubectl
 do
     zplug "lib/${LIB}", from:oh-my-zsh
 done;
 
+zplug "plugins/fancy-ctrl-z", from:oh-my-zsh
+
 # True men compile their fzf plugin
 zplug 'junegunn/fzf', depth:1, hook-build:'./install --key-bindings --completion --no-update-rc --64 --no-bash --no-fish'
+zplug "zuxfoucault/colored-man-pages_mod"
+# zplug "arzzen/calc.plugin.zsh"
 # Fish shell like autosuggestions
 zplug "zsh-users/zsh-autosuggestions"
-# zplug 'hchbaw/auto-fu.zsh'
-zplug "zuxfoucault/colored-man-pages_mod"
-zplug "arzzen/calc.plugin.zsh"
 zplug "zsh-users/zsh-syntax-highlighting"
 
 ##################################plugins for others######################################
@@ -97,9 +108,15 @@ if ! zplug check --verbose; then
 fi
 
 zplug load
+setopt monitor
+
 
 # Because fzf likes to make a file in the home directory, enable it manually here
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Codeception autocompletion
+# CODECEPT_PATH="${HOME}/.composer/vendor/codeception/codeception/codecept"
+# [ -f $CODECEPT_PATH ] && source <($CODECEPT_PATH _completion --generate-hook --program codecept --use-vendor-bin)
 
 #Enable Asynchronous Mode for suggestions
 ZSH_AUSOSUGGEST_USE_ASYNC=true
@@ -116,39 +133,30 @@ if which ag &> /dev/null; then
     alias afind="ag -il"
 fi
 
-# Unfortunatley the below config for auto-fu messes up syntax highliting & suggestions
-# until I find a way keep it commented
-#
-# zle-line-init () {auto-fu-init;}; zle -N zle-line-init
-# zstyle ':completion:*' completer _oldlist _complete
-# zle -N zle-keymap-select auto-fu-zle-keymap-select
-# A=$HOME/.zplug/repos/hchbaw/auto-fu.zsh/auto-fu.zsh; (zsh -c "source $A ; auto-fu-zcompile $A ~/.zsh")
-# source ~/.zsh/auto-fu; auto-fu-install
+# LS_COLORS=$(ls_colors_generator)
 
-# Use even-better-ls like a B0$$
+# run_ls() {
+    # ls-i --color=auto -w $(tput cols) "$@"
+# }
 
-LS_COLORS=$(ls_colors_generator)
+# run_dir() {
+    # dir-i --color=auto -w $(tput cols) "$@"
+# }
 
-run_ls() {
-    ls-i --color=auto -w $(tput cols) "$@"
-}
-
-run_dir() {
-    dir-i --color=auto -w $(tput cols) "$@"
-}
-
-run_vdir() {
-    vdir-i --color=auto -w $(tput cols) "$@"
-}
+# run_vdir() {
+    # vdir-i --color=auto -w $(tput cols) "$@"
+# }
 
 ##################################Aliases######################################
 
-alias ls="run_ls"
-alias dir="run_dir"
-alias vdir="run_vdir"
+# alias ls="run_ls"
+# alias dir="run_dir"
+# alias vdir="run_vdir"
 
 #Copy to clipboard
 alias xc="xclip -selection c"
 
 #Paste from clipboard
 alias xp="xclip -selection clipboard -o"
+
+alias glances="glances 2> /dev/null"
