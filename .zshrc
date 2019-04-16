@@ -87,6 +87,7 @@ zplug "plugins/fancy-ctrl-z", from:oh-my-zsh
 
 # True men compile their fzf plugin
 zplug 'junegunn/fzf', depth:1, hook-build:'./install --key-bindings --completion --no-update-rc --64 --no-bash --no-fish'
+# zplug 'junegunn/fzf', depth:1, hook-build:'./install --all'
 zplug "zuxfoucault/colored-man-pages_mod"
 # zplug "arzzen/calc.plugin.zsh"
 # Fish shell like autosuggestions
@@ -108,7 +109,6 @@ if ! zplug check --verbose; then
 fi
 
 zplug load
-setopt monitor
 
 
 # Because fzf likes to make a file in the home directory, enable it manually here
@@ -133,30 +133,35 @@ if which ag &> /dev/null; then
     alias afind="ag -il"
 fi
 
-# LS_COLORS=$(ls_colors_generator)
+if [ -x "$(which ls-i)" ]; then
+    LS_COLORS=$(ls_colors_generator)
 
-# run_ls() {
-    # ls-i --color=auto -w $(tput cols) "$@"
-# }
+    run_ls() {
+        ls-i --color=auto -w $(tput cols) "$@"
+    }
 
-# run_dir() {
-    # dir-i --color=auto -w $(tput cols) "$@"
-# }
+    run_dir() {
+        dir-i --color=auto -w $(tput cols) "$@"
+    }
 
-# run_vdir() {
-    # vdir-i --color=auto -w $(tput cols) "$@"
-# }
+    run_vdir() {
+        vdir-i --color=auto -w $(tput cols) "$@"
+    }
+
+    alias ls="run_ls"
+    alias dir="run_dir"
+    alias vdir="run_vdir"
+fi
+
+if [ -x "$(which xclip)" ]; then
+    #Copy to clipboard
+    alias xc="xclip -selection c"
+
+    #Paste from clipboard
+    alias xp="xclip -selection clipboard -o"
+fi
 
 ##################################Aliases######################################
 
-# alias ls="run_ls"
-# alias dir="run_dir"
-# alias vdir="run_vdir"
-
-#Copy to clipboard
-alias xc="xclip -selection c"
-
-#Paste from clipboard
-alias xp="xclip -selection clipboard -o"
-
 alias glances="glances 2> /dev/null"
+setopt monitor
