@@ -159,6 +159,9 @@ if [ -x "$(which xclip)" ]; then
 
     #Paste from clipboard
     alias xp="xclip -selection clipboard -o"
+elif [ -x "$(which termux-clipboard-get)" ]; then 
+    alias xc="termux-clipboard-get"
+    alias xp="termux-clipboard-set"
 fi
 
 ##################################Aliases######################################
