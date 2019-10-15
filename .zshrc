@@ -1,4 +1,4 @@
-# Make sure you have gawk installed otherwise zplug insall will fail
+# Make sure you have gawk installed otherwise zplug install will fail
 # Check if zplug is installed
 if [[ ! -d ~/.zplug ]]; then
   git clone https://github.com/zplug/zplug ~/.zplug
@@ -51,7 +51,7 @@ setopt CORRECT
 # Set our username so the prompt hides it
 DEFAULT_USER=`whoami`
 
-XDG_CONFIG_HOME=~/.config/powerline
+XDG_CONFIG_HOME=$HOME/.config
 POWERLEVEL9K_MODE='nerdfont-complete'
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=1
 POWERLEVEL9K_SHORTEN_DELIMITER=""
@@ -74,7 +74,6 @@ source ~/.zplug/init.zsh
 
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 # Make sure to use double quotes to prevent shell expansioni
-# TODO: Customize the theme already!
 zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme
 
 # Use oh my zsh defaults because we <3 it!
@@ -132,6 +131,9 @@ unsetopt auto_pushd
 if which ag &> /dev/null; then
     alias afind="ag -il"
 fi
+
+# Only enable this once you have zsh 5.7 or greater
+# [[ "$COLORTERM" == (24bit|truecolor) || "${terminfo[colors]}" -eq '16777216' ]] || zmodload zsh/nearcolor
 
 if [ -x "$(which ls-i)" ]; then
     LS_COLORS=$(ls_colors_generator)
