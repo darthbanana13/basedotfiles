@@ -1,25 +1,16 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # Make sure you have gawk installed otherwise zplug install will fail
 # Check if zplug is installed
 if [[ ! -d ~/.zplug ]]; then
   git clone https://github.com/zplug/zplug ~/.zplug
   source ~/.zplug/init.zsh && zplug update --self
 fi
-
-# check if lauched it GUI terminal, if so start TMUX automatically
-if [[ -n "$KONSOLE" ]] ;then
-    if which tmux >/dev/null 2>&1; then
-        # if no session is started, start a new session
-        test -z ${TMUX} && tmux
-
-        # when quitting tmux, try to attach
-        while test -z ${TMUX}; do
-            tmux attach || break
-        done
-    fi
-fi
-
-# Composer path
-export PATH="$PATH:$HOME/.local/bin:/opt/mssql-tools/bin:$HOME/.composer/vendor/bin"
 
 # Node Version manager for managing node versions
 export NVM_DIR="$HOME/.nvm"
@@ -49,16 +40,21 @@ setopt RM_STAR_WAIT
 setopt CORRECT
 
 # Set our username so the prompt hides it
-DEFAULT_USER=`whoami`
+export DEFAULT_USER=`whoami`
 
-XDG_CONFIG_HOME=$HOME/.config
-POWERLEVEL9K_MODE='nerdfont-complete'
-POWERLEVEL9K_SHORTEN_DIR_LENGTH=1
-POWERLEVEL9K_SHORTEN_DELIMITER=""
-POWERLEVEL9K_SHORTEN_STRATEGY="truncate_from_right"
+# Set go variables
+export GOPATH=$HOME/.local/go
+
+#Set XDG Base directory specificatins
+export XDG_CONFIG_HOME=$HOME/.config
+export XDG_CACHE_HOME=$HOME/.cache
+export XDG_DATA_HOME=$HOME/.local/share
 
 zstyle :omz:plugins:ssh-agent agent-forwarding on
 zstyle :omz:plugins:ssh-agent identities id_rsa
+
+# Composer path
+export PATH="$PATH:$HOME/.local/bin:/opt/mssql-tools/bin:$HOME/.composer/vendor/bin:$HOME/.local/go/bin"
 
 
 # This messes up highlight
@@ -74,28 +70,28 @@ source ~/.zplug/init.zsh
 
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 # Make sure to use double quotes to prevent shell expansioni
-zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme
+zplug "romkatv/powerlevel10k", as:theme, depth:1
 
 # Use oh my zsh defaults because we <3 it!
 for LIB in compfix completion correction diagnostics directories functions git grep history key-bindings misc nvm prompt_info_functions spectrum termsupport theme-and-appearance ssh-agent kubectl
 do
-    zplug "lib/${LIB}", from:oh-my-zsh
+    zplug "lib/${LIB}", from:oh-my-zsh, depth:1
 done;
 
-zplug "plugins/fancy-ctrl-z", from:oh-my-zsh
+zplug "plugins/fancy-ctrl-z", from:oh-my-zsh, depth:1
 
 # True men compile their fzf plugin
-zplug 'junegunn/fzf', depth:1, hook-build:'./install --key-bindings --completion --no-update-rc --64 --no-bash --no-fish'
+zplug "junegunn/fzf", depth:1, hook-build:'./install --key-bindings --completion --no-update-rc --64 --no-bash --no-fish'
 # zplug 'junegunn/fzf', depth:1, hook-build:'./install --all'
-zplug "zuxfoucault/colored-man-pages_mod"
+zplug "zuxfoucault/colored-man-pages_mod", depth:1
 # zplug "arzzen/calc.plugin.zsh"
 # Fish shell like autosuggestions
-zplug "zsh-users/zsh-autosuggestions"
-zplug "zsh-users/zsh-syntax-highlighting"
+zplug "zsh-users/zsh-autosuggestions", depth:1
+zplug "zsh-users/zsh-syntax-highlighting", depth:1
 
 ##################################plugins for others######################################
 
-zplug "tmux-plugins/tpm"
+zplug "tmux-plugins/tpm", depth:1
 
 # Install packages that have not been installed yet
 if ! zplug check --verbose; then
@@ -170,3 +166,6 @@ fi
 
 alias glances="glances 2> /dev/null"
 setopt monitor
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
