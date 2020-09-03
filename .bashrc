@@ -8,6 +8,11 @@ case $- in
       *) return;;
 esac
 
+if [[ -x /bin/zsh ]]; then
+    export SHELL=bin/zsh
+    exec /bin/zsh -l
+fi
+
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
@@ -43,34 +48,17 @@ esac
 # uncomment for a colored prompt, if the terminal has the capability; turned
 # off by default to not distract the user: the focus in a terminal window
 # should be on the output of commands, not on the prompt
-#force_color_prompt=yes
 
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
+        # We have color support; assume it's compliant with Ecma-48
+        # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+        # a case would tend to support setf rather than setaf.)
+        color_prompt=yes
     else
-	color_prompt=
+        color_prompt=
     fi
 fi
-
-if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
-unset color_prompt force_color_prompt
-
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
-esac
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -117,42 +105,15 @@ if ! shopt -oq posix; then
 fi
 
 #Start Radu
-# Set prompt
-# `root` has a red prompt, others have a yellow one.
-# If we are connected remotley, `@<hostname` show first.
-build_ps1() {
-    local prompt_color='\[\e[33m\]'
-    local host=''
-    [[ $UID -eq 0 ]] && prompt_color='\[\e[1;31m\]'
-    [[ $SSH_TTY ]] && host="@HOSTNAME "
-    echo "${prompt_color}${host}\w\[\e[0m\] \$ "
-}
-PS1=$(build_ps1)
-PS2='\\ '
-PS4='+ $LINENO: '
-if [[ -n "$KONSOLE" ]] ;then
-    #only if in konsole
-    export AG_NO_HIST="false"
-    export THEME=$HOME/.bash/themes/agnoster-bash/agnoster.bash
-    #if [ -f /usr/local/lib/python3.5/dist-packages/powerline/bindings/bash/powerline.sh ]; then
-    #    source /usr/local/lib/python3.5/dist-packages/powerline/bindings/bash/powerline.sh
-    #fi
-    if [[ -f $THEME ]]; then
-        export DEFAULT_USER=`whoami`
-        source $THEME
-    fi
-    # TMUX
-    if which tmux >/dev/null 2>&1; then
-        # if no session is started, start a new session
-        test -z ${TMUX} && tmux
 
-        # when quitting tmux, try to attach
-        # while test -z ${TMUX}; do
-            # tmux attach || break
-        # done
-    fi
+export AG_NO_HIST="false"
+export THEME=$HOME/.bash/themes/agnoster-bash/agnoster.bash
+if [[ ! -f $THEME ]]; then
+    mkdir -p $HOME/.bash/themes/agnoster-bash
+    git clone https://github.com/speedenator/agnoster-bash.git $HOME/.bash/themes/agnoster-bash 
 fi
-#End Radu
+export DEFAULT_USER=`whoami`
+source $THEME
 
 export PATH=$PATH:~/.local/bin:/opt/mssql-tools/bin
 
