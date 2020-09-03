@@ -9,7 +9,7 @@ case $- in
 esac
 
 if [[ -x /bin/zsh ]]; then
-    export SHELL=bin/zsh
+    export SHELL=/bin/zsh
     exec /bin/zsh -l
 fi
 
