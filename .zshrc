@@ -56,6 +56,8 @@ zstyle :omz:plugins:ssh-agent identities id_rsa
 # Composer path
 export PATH="$PATH:$HOME/.local/bin:/opt/mssql-tools/bin:$HOME/.composer/vendor/bin:$HOME/.local/go/bin"
 
+# Make VIM the default editor
+export EDITOR=vim
 
 # This messes up highlight
 # zstyle :incremental list yes
