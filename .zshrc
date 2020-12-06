@@ -82,9 +82,7 @@ done;
 
 zplug "plugins/fancy-ctrl-z", from:oh-my-zsh, depth:1
 
-# True men compile their fzf plugin
-zplug "junegunn/fzf", depth:1, hook-build:'./install --key-bindings --completion --no-update-rc --64 --no-bash --no-fish'
-# zplug 'junegunn/fzf', depth:1, hook-build:'./install --all'
+zplug 'junegunn/fzf', depth:1, hook-build:'./install --key-bindings --completion --no-update-rc --no-fish'
 zplug "zuxfoucault/colored-man-pages_mod", depth:1
 # zplug "arzzen/calc.plugin.zsh"
 # Fish shell like autosuggestions
