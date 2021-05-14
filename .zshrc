@@ -105,13 +105,8 @@ fi
 
 zplug load
 
-
 # Because fzf likes to make a file in the home directory, enable it manually here
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-# Codeception autocompletion
-# CODECEPT_PATH="${HOME}/.composer/vendor/codeception/codeception/codecept"
-# [ -f $CODECEPT_PATH ] && source <($CODECEPT_PATH _completion --generate-hook --program codecept --use-vendor-bin)
 
 #Enable Asynchronous Mode for suggestions
 ZSH_AUSOSUGGEST_USE_ASYNC=true
@@ -123,32 +118,14 @@ SAVEHIST=100000
 # Stop using pushd like a crazy person
 unsetopt auto_pushd
 
-# The future is here! Intelgent Ag
-if which ag &> /dev/null; then
-    alias afind="ag -il"
-fi
-
 # Only enable this once you have zsh 5.7 or greater
-# [[ "$COLORTERM" == (24bit|truecolor) || "${terminfo[colors]}" -eq '16777216' ]] || zmodload zsh/nearcolor
+[[ "$COLORTERM" == (24bit|truecolor) || "${terminfo[colors]}" -eq '16777216' ]] || zmodload zsh/nearcolor
 
-if [ -x "$(which ls-i)" ]; then
-    LS_COLORS=$(ls_colors_generator)
-
-    run_ls() {
-        ls-i --color=auto -w $(tput cols) "$@"
-    }
-
-    run_dir() {
-        dir-i --color=auto -w $(tput cols) "$@"
-    }
-
-    run_vdir() {
-        vdir-i --color=auto -w $(tput cols) "$@"
-    }
-
-    alias ls="run_ls"
-    alias dir="run_dir"
-    alias vdir="run_vdir"
+##################################Aliases######################################
+#
+# Color ls
+if [ -x "$(which lsd)" ]; then
+    alias ls='lsd'
 fi
 
 if [ -x "$(which xclip)" ]; then
@@ -161,8 +138,6 @@ elif [ -x "$(which termux-clipboard-get)" ]; then
     alias xc="termux-clipboard-get"
     alias xp="termux-clipboard-set"
 fi
-
-##################################Aliases######################################
 
 alias glances="glances 2> /dev/null"
 setopt monitor
