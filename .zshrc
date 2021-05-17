@@ -121,6 +121,11 @@ unsetopt auto_pushd
 # Only enable this once you have zsh 5.7 or greater
 [[ "$COLORTERM" == (24bit|truecolor) || "${terminfo[colors]}" -eq '16777216' ]] || zmodload zsh/nearcolor
 
+##################################Windows (is special) quircks######################################
+
+export DISPLAY=$(/mnt/c/Windows/System32/ipconfig.exe | grep -A 5 "vEthernet (WSL)" | grep -oP '(?<=IPv4 Address(?:\.\s){11}:\s)((?:\d+\.){3}\d+)'):0.0
+export LIBGL_ALWAYS_INDIRECT=1
+
 ##################################Aliases######################################
 #
 # Color ls
