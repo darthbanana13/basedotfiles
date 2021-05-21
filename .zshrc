@@ -1,3 +1,8 @@
+if [[ -x "$(which tmux)" ]]; then
+    if [[ -z ${TMUX} ]]; then # if no session is started, start a new session
+      tmux attach 2> /dev/null || tmux
+    fi
+fi
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -53,11 +58,14 @@ export XDG_DATA_HOME=$HOME/.local/share
 zstyle :omz:plugins:ssh-agent agent-forwarding on
 zstyle :omz:plugins:ssh-agent identities id_rsa
 
-# Composer path
-export PATH="$PATH:$HOME/.local/bin:/opt/mssql-tools/bin:$HOME/.composer/vendor/bin:$HOME/.local/go/bin"
+# Add local bin directories to PATH
+export PATH="$PATH:$HOME/.local/bin:$HOME/.composer/vendor/bin:$HOME/.local/go/bin"
 
 # Make VIM the default editor
 export EDITOR=vim
+
+# Use Docker BuildKit
+export DOCKER_BUILDKIT=1
 
 # This messes up highlight
 # zstyle :incremental list yes
@@ -146,6 +154,9 @@ fi
 
 alias glances="glances 2> /dev/null"
 setopt monitor
+
+# Don't make using bash interactively impossible
+alias bash="PERMIT_BASH=true bash"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

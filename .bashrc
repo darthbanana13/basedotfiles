@@ -8,7 +8,7 @@ case $- in
       *) return;;
 esac
 
-if [[ -x /bin/zsh ]]; then
+if [[ -x "$(which zsh)" ]] && [[ "${PERMIT_BASH}" != true ]]; then
     export SHELL=/bin/zsh
     exec /bin/zsh -l
 fi
