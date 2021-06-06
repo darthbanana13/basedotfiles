@@ -3,18 +3,24 @@ if [[ -x "$(which tmux)" ]]; then
       tmux attach 2> /dev/null || tmux
     fi
 fi
+
+#Set XDG Base directory specificatins
+export XDG_CONFIG_HOME=$HOME/.config
+export XDG_CACHE_HOME=$HOME/.cache
+export XDG_DATA_HOME=$HOME/.local/share
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
 # Make sure you have gawk installed otherwise zplug install will fail
 # Check if zplug is installed
 if [[ ! -d ~/.zplug ]]; then
-  git clone https://github.com/zplug/zplug ~/.zplug
-  source ~/.zplug/init.zsh && zplug update --self
+    git clone https://github.com/zplug/zplug ~/.zplug
+    source ~/.zplug/init.zsh && zplug update --self
 fi
 
 # Node Version manager for managing node versions
@@ -27,15 +33,15 @@ export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 
 #SSH Reagent (http://tychoish.com/post/9-awesome-ssh-tricks/)
 ssh-reagent () {
-  for agent in /tmp/ssh-*/agent.*; do
-      export SSH_AUTH_SOCK=$agent
-      if ssh-add -l 2>&1 > /dev/null; then
-         echo Found working SSH Agent:
-         ssh-add -l
-         return
-      fi
-  done
-  echo Cannot find ssh agent - maybe you should reconnect and forward it?
+    for agent in /tmp/ssh-*/agent.*; do
+        export SSH_AUTH_SOCK=$agent
+        if ssh-add -l 2>&1 > /dev/null; then
+            echo Found working SSH Agent:
+            ssh-add -l
+            return
+        fi
+    done
+    echo Cannot find ssh agent - maybe you should reconnect and forward it?
 }
 
 #if you do a 'rm *', Zsh will give you a sanity check!
@@ -50,22 +56,24 @@ export DEFAULT_USER=`whoami`
 # Set go variables
 export GOPATH=$HOME/.local/go
 
-#Set XDG Base directory specificatins
-export XDG_CONFIG_HOME=$HOME/.config
-export XDG_CACHE_HOME=$HOME/.cache
-export XDG_DATA_HOME=$HOME/.local/share
-
 zstyle :omz:plugins:ssh-agent agent-forwarding on
 zstyle :omz:plugins:ssh-agent identities id_rsa
 
 # Add local bin directories to PATH
 export PATH="$PATH:$HOME/.local/bin:$HOME/.composer/vendor/bin:$HOME/.local/go/bin"
 
+if [ -d "/usr/lib/jvm/java-16-openjdk-amd64" ]; then
+    export JAVA_HOME="/usr/lib/jvm/java-16-openjdk-amd64"
+fi
+if [ -d "${HOME}/.poetry/bin" ]; then
+    export PATH="${HOME}/.poetry/bin:$PATH"
+fi
 # Make VIM the default editor
 export EDITOR=vim
 
 # Use Docker BuildKit
 export DOCKER_BUILDKIT=1
+export COMPOSE_DOCKER_CLI_BUILD=1
 
 # This messes up highlight
 # zstyle :incremental list yes
@@ -82,8 +90,10 @@ zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 # Make sure to use double quotes to prevent shell expansioni
 zplug "romkatv/powerlevel10k", as:theme, depth:1
 
+zplug "direnv/direnv", as:command, rename-to:direnv, use:"direnv", hook-build:"make"
+
 # Use oh my zsh defaults because we <3 it!
-for LIB in compfix completion correction diagnostics directories functions git grep history key-bindings misc nvm prompt_info_functions spectrum termsupport theme-and-appearance ssh-agent kubectl
+for LIB in compfix completion correction diagnostics directories functions git grep history key-bindings misc nvm prompt_info_functions spectrum termsupport theme-and-appearance ssh-agent kubectl direnv
 do
     zplug "lib/${LIB}", from:oh-my-zsh, depth:1
 done;
@@ -131,11 +141,13 @@ unsetopt auto_pushd
 
 ##################################Windows (is special) quircks######################################
 
-export DISPLAY=$(/mnt/c/Windows/System32/ipconfig.exe | grep -A 5 "vEthernet (WSL)" | grep -oP '(?<=IPv4 Address(?:\.\s){11}:\s)((?:\d+\.){3}\d+)'):0.0
-export LIBGL_ALWAYS_INDIRECT=1
+if [ -d "/mnt/c/Windows" ]; then
+    export DISPLAY=$(/mnt/c/Windows/System32/ipconfig.exe | grep -A 5 "vEthernet (WSL)" | grep -oP '(?<=IPv4 Address(?:\.\s){11}:\s)((?:\d+\.){3}\d+)'):0.0
+    export LIBGL_ALWAYS_INDIRECT=1
+fi
 
 ##################################Aliases######################################
-#
+
 # Color ls
 if [ -x "$(which lsd)" ]; then
     alias ls='lsd'
@@ -160,3 +172,4 @@ alias bash="PERMIT_BASH=true bash"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
