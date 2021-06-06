@@ -1,10 +1,13 @@
+# If not chsh to zsh make sure the SHELL value is sane
+export SHELL="$(which zsh)"
+
 if [[ -x "$(which tmux)" ]]; then
     if [[ -z ${TMUX} ]]; then # if no session is started, start a new session
       tmux attach 2> /dev/null || tmux
     fi
 fi
 
-#Set XDG Base directory specificatins
+# Set XDG Base directory specificatins
 export XDG_CONFIG_HOME=$HOME/.config
 export XDG_CACHE_HOME=$HOME/.cache
 export XDG_DATA_HOME=$HOME/.local/share
@@ -53,15 +56,19 @@ setopt CORRECT
 # Set our username so the prompt hides it
 export DEFAULT_USER=`whoami`
 
-# Set go variables
-export GOPATH=$HOME/.local/go
-
 zstyle :omz:plugins:ssh-agent agent-forwarding on
 zstyle :omz:plugins:ssh-agent identities id_rsa
 
 # Add local bin directories to PATH
-export PATH="$PATH:$HOME/.local/bin:$HOME/.composer/vendor/bin:$HOME/.local/go/bin"
+export PATH="${PATH}:${HOME}/.local/bin"
 
+if [ -d "${HOME}/.composer/vendor/bin" ]; then
+    export PATH="${PATH}:${HOME}/.composer/vendor/bin"
+fi
+if [ -d "${HOME}/.local/go/bin" ]; then
+    export PATH="${PATH}:${HOME}/.local/go/bin"
+    export GOPATH="${HOME}/.local/go"
+fi
 if [ -d "/usr/lib/jvm/java-16-openjdk-amd64" ]; then
     export JAVA_HOME="/usr/lib/jvm/java-16-openjdk-amd64"
 fi
