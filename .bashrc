@@ -8,9 +8,10 @@ case $- in
       *) return;;
 esac
 
-if [[ -x "$(which zsh)" ]] && [[ "${PERMIT_BASH}" != true ]]; then
-    export SHELL=/bin/zsh
-    exec /bin/zsh -l
+$ZSH_PATH=$(which zsh)
+if [[ -n "${ZSH_PATH}" ]] && [[ "${PERMIT_BASH}" != true ]] && [[ -o login ]]; then
+    export SHELL="${ZSH_PATH}"
+    exec ${SHELL} -l
 fi
 
 # don't put duplicate lines or lines starting with space in the history.
