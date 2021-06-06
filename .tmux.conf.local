@@ -385,6 +385,9 @@ set -g @plugin 'christoomey/vim-tmux-navigator'
 bind-key 's' set-window-option synchronize-panes
 
 set -g default-terminal "tmux-256color" # italics!
+# set Zsh as your default Tmux shell
+# if not then Oh-my-tmux will not prefix the SHELL variable with /
+set-option -g default-shell /usr/bin/zsh
 
 # -- custom variables ----------------------------------------------------------
 
