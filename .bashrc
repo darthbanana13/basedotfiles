@@ -8,7 +8,7 @@ case $- in
       *) return;;
 esac
 
-$ZSH_PATH=$(which zsh)
+ZSH_PATH="$(which zsh)"
 if [[ -n "${ZSH_PATH}" ]] && [[ "${PERMIT_BASH}" != true ]] && [[ -o login ]]; then
     export SHELL="${ZSH_PATH}"
     exec ${SHELL} -l
