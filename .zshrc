@@ -131,7 +131,24 @@ fi
 zplug load
 
 # Because fzf likes to make a file in the home directory, enable it manually here
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+if [[ -f ~/.fzf.zsh ]]; then
+    source ~/.fzf.zsh
+
+    if [[ -x "$(which fd)" ]]; then
+        _fzf_compgen_path() {
+            fd  --color=always --follow --hidden --exclude ".git" . "$1"
+        }
+
+        _fzf_compgen_dir() {
+            fd --type d  --color=always --follow --hidden --exclude ".git" . "$1"
+        }
+
+        export FZF_DEFAULT_COMMAND="fd --type file --color=always --follow --hidden --exclude .git"
+        export FZF_DEFAULT_OPTS="--ansi"
+        export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
+        export FZF_TMUX_OPTS="-d 40%"
+    fi
+fi
 
 #Enable Asynchronous Mode for suggestions
 ZSH_AUSOSUGGEST_USE_ASYNC=true
