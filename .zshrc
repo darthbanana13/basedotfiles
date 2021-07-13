@@ -1,6 +1,9 @@
 # If not chsh to zsh make sure the SHELL value is sane
 export SHELL="$(which zsh)"
 
+# In case this fails: https://stackoverflow.com/a/48877084
+# sudo ln -sf /usr/share/terminfo/x/xterm-color /usr/share/terminfo/x/xterm-256color
+# or follow the terminfo steps for alacritty
 if [[ -x "$(which tmux)" ]]; then
     if [[ -z ${TMUX} ]]; then # if no session is started, start a new session
       tmux attach 2> /dev/null || tmux
@@ -136,7 +139,7 @@ if [[ -f ~/.fzf.zsh ]]; then
 
     if [[ -x "$(which fd)" ]]; then
         _fzf_compgen_path() {
-            fd  --color=always --follow --hidden --exclude ".git" . "$1"
+            fd --color=always --follow --hidden --exclude ".git" . "$1"
         }
 
         _fzf_compgen_dir() {
@@ -146,7 +149,7 @@ if [[ -f ~/.fzf.zsh ]]; then
         export FZF_DEFAULT_COMMAND="fd --type file --color=always --follow --hidden --exclude .git"
         export FZF_DEFAULT_OPTS="--ansi"
         export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
-        export FZF_TMUX_OPTS="-d 40%"
+        export FZF_TMUX_OPTS="-p 95%,60%"
     fi
 fi
 
@@ -196,4 +199,3 @@ alias bash="PERMIT_BASH=true bash"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
