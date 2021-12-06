@@ -1,32 +1,32 @@
 # If not chsh to zsh make sure the SHELL value is sane
 export SHELL="$(which zsh)"
 
-# In case this fails: https://stackoverflow.com/a/48877084
-# sudo ln -sf /usr/share/terminfo/x/xterm-color /usr/share/terminfo/x/xterm-256color
-# or follow the terminfo steps for alacritty
-if [[ -x "$(which tmux)" ]]; then
-    if [[ -z ${TMUX} ]]; then # if no session is started, start a new session
-      tmux attach 2> /dev/null || tmux
-    fi
-fi
-
 # Set XDG Base directory specificatins
 export XDG_CONFIG_HOME=$HOME/.config
 export XDG_CACHE_HOME=$HOME/.cache
 export XDG_DATA_HOME=$HOME/.local/share
 
+# In case this fails: https://stackoverflow.com/a/48877084
+# sudo ln -sf /usr/share/terminfo/x/xterm-color /usr/share/terminfo/x/xterm-256color
+# or follow the terminfo steps for alacritty
+if [[ -x "$(which tmux)" ]]; then
+  if [[ -z ${TMUX} ]]; then # if no session is started, start a new session
+    tmux attach 2> /dev/null || tmux
+  fi
+fi
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
 # Make sure you have gawk installed otherwise zplug install will fail
 # Check if zplug is installed
 if [[ ! -d ~/.zplug ]]; then
-    git clone https://github.com/zplug/zplug ~/.zplug
-    source ~/.zplug/init.zsh && zplug update --self
+  git clone https://github.com/zplug/zplug ~/.zplug
+  source ~/.zplug/init.zsh && zplug update --self
 fi
 
 # Node Version manager for managing node versions
@@ -39,15 +39,15 @@ export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 
 #SSH Reagent (http://tychoish.com/post/9-awesome-ssh-tricks/)
 ssh-reagent () {
-    for agent in /tmp/ssh-*/agent.*; do
-        export SSH_AUTH_SOCK=$agent
-        if ssh-add -l 2>&1 > /dev/null; then
-            echo Found working SSH Agent:
-            ssh-add -l
-            return
-        fi
-    done
-    echo Cannot find ssh agent - maybe you should reconnect and forward it?
+  for agent in /tmp/ssh-*/agent.*; do
+    export SSH_AUTH_SOCK=$agent
+      if ssh-add -l 2>&1 > /dev/null; then
+        echo Found working SSH Agent:
+        ssh-add -l
+        return
+      fi
+  done
+  echo Cannot find ssh agent - maybe you should reconnect and forward it?
 }
 
 #if you do a 'rm *', Zsh will give you a sanity check!
@@ -66,17 +66,17 @@ zstyle :omz:plugins:ssh-agent identities id_rsa
 export PATH="${PATH}:${HOME}/.local/bin"
 
 if [ -d "${HOME}/.composer/vendor/bin" ]; then
-    export PATH="${PATH}:${HOME}/.composer/vendor/bin"
+  export PATH="${PATH}:${HOME}/.composer/vendor/bin"
 fi
 if [ -d "${HOME}/.local/go/bin" ]; then
-    export PATH="${PATH}:${HOME}/.local/go/bin"
-    export GOPATH="${HOME}/.local/go"
+  export PATH="${PATH}:${HOME}/.local/go/bin"
+  export GOPATH="${HOME}/.local/go"
 fi
 if [ -d "/usr/lib/jvm/java-16-openjdk-amd64" ]; then
-    export JAVA_HOME="/usr/lib/jvm/java-16-openjdk-amd64"
+  export JAVA_HOME="/usr/lib/jvm/java-16-openjdk-amd64"
 fi
 if [ -d "${HOME}/.poetry/bin" ]; then
-    export PATH="${HOME}/.poetry/bin:$PATH"
+  export PATH="${HOME}/.poetry/bin:$PATH"
 fi
 # Make VIM the default editor
 export EDITOR=vim
@@ -105,7 +105,7 @@ zplug "direnv/direnv", as:command, rename-to:direnv, use:"direnv", hook-build:"m
 # Use oh my zsh defaults because we <3 it!
 for LIB in compfix completion correction diagnostics directories functions git grep history key-bindings misc nvm prompt_info_functions spectrum termsupport theme-and-appearance ssh-agent kubectl direnv
 do
-    zplug "lib/${LIB}", from:oh-my-zsh, depth:1
+  zplug "lib/${LIB}", from:oh-my-zsh, depth:1
 done;
 
 zplug "plugins/fancy-ctrl-z", from:oh-my-zsh, depth:1
@@ -123,34 +123,32 @@ zplug "tmux-plugins/tpm", depth:1
 
 # Install packages that have not been installed yet
 if ! zplug check --verbose; then
-    printf "Install? [y/N]: "
-    if read -q; then
-        echo; zplug install
-    else
-        echo
-    fi
+  printf "Install? [y/N]: "
+  if read -q; then
+    echo; zplug install
+  fi
 fi
 
 zplug load
 
 # Because fzf likes to make a file in the home directory, enable it manually here
 if [[ -f ~/.fzf.zsh ]]; then
-    source ~/.fzf.zsh
+  source ~/.fzf.zsh
 
-    if [[ -x "$(which fd)" ]]; then
-        _fzf_compgen_path() {
-            fd --color=always --follow --hidden --exclude ".git" . "$1"
-        }
+  if [[ -x "$(which fd)" ]]; then
+    _fzf_compgen_path() {
+      fd --color=always --follow --hidden --exclude ".git" . "$1"
+    }
 
-        _fzf_compgen_dir() {
-            fd --type d  --color=always --follow --hidden --exclude ".git" . "$1"
-        }
+    _fzf_compgen_dir() {
+      fd --type d  --color=always --follow --hidden --exclude ".git" . "$1"
+    }
 
-        export FZF_DEFAULT_COMMAND="fd --type file --color=always --follow --hidden --exclude .git"
-        export FZF_DEFAULT_OPTS="--ansi"
-        export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
-        export FZF_TMUX_OPTS="-p 95%,60%"
-    fi
+    export FZF_DEFAULT_COMMAND="fd --type file --color=always --follow --hidden --exclude .git"
+    export FZF_DEFAULT_OPTS="--ansi"
+    export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
+    export FZF_TMUX_OPTS="-p 95%,60%"
+  fi
 fi
 
 #Enable Asynchronous Mode for suggestions
@@ -166,29 +164,85 @@ unsetopt auto_pushd
 # Only enable this once you have zsh 5.7 or greater
 [[ "$COLORTERM" == (24bit|truecolor) || "${terminfo[colors]}" -eq '16777216' ]] || zmodload zsh/nearcolor
 
-##################################Windows (is special) quircks######################################
+##################################Windows (is special) quirks######################################
 
 if [ -d "/mnt/c/Windows" ]; then
-    export DISPLAY=$(/mnt/c/Windows/System32/ipconfig.exe | grep -A 5 "vEthernet (WSL)" | grep -oP '(?<=IPv4 Address(?:\.\s){11}:\s)((?:\d+\.){3}\d+)'):0.0
-    export LIBGL_ALWAYS_INDIRECT=1
+  export DISPLAY=$(/mnt/c/Windows/System32/ipconfig.exe | grep -A 5 "vEthernet (WSL)" | grep -oP '(?<=IPv4 Address(?:\.\s){11}:\s)((?:\d+\.){3}\d+)'):0.0
+  export LIBGL_ALWAYS_INDIRECT=1
+  
+  # Start Docker daemon automatically when logging in
+  RUNNING=`ps aux | grep dockerd | grep -v grep`
+  if [ -z "$RUNNING" ]; then
+    sudo dockerd > /dev/null 2>&1 &
+    disown
+  fi
 fi
 
+##################################Proxy######################################
+if [[ -f ~/.proxy.sh ]]; then
+  source ~/.proxy.sh
+fi
+
+function proxy_unset {
+  unset http_proxy
+  unset HTTP_PROXY
+  unset https_proxy
+  unset HTTPS_PROXY
+  unset ftp_proxy
+  unset FTP_PROXY
+  unset all_proxy
+  unset ALL_PROXY
+  unset PIP_PROXY
+  unset no_proxy
+  unset NO_PROXY
+  unset MAVEN_OPTS
+}
+
+function proxy_set {
+  PROXY="${PROXY_PROTOCOL}://${PROXY_HOST}:${PROXY_PORT}"
+  export http_proxy=$PROXY
+  export HTTP_PROXY=$PROXY
+  export https_proxy=$PROXY
+  export HTTPS_PROXY=$PROXY
+  export ftp_proxy=$PROXY
+  export FTP_PROXY=$PROXY
+  export all_proxy=$PROXY
+  export ALL_PROXY=$PROXY
+  export PIP_PROXY=$PROXY
+  export no_proxy=$NOPROXY
+  export NO_PROXY=$NOPROXY
+  export MAVEN_OPTS="-Dhttp.proxyHost=$PROXY_HOST -Dhttp.proxyPort=$PROXY_PORT -Dhttps.proxyHost=$PROXY_HOST -Dhttps.proxyPort=$PROXY_PORT"
+}
+
+# proxy probe
+function proxy_probe {
+  if nc -z -w 3 ${PROXY_HOST} ${PROXY_PORT} >/dev/null 2>&1; then
+    # echo "proxy_probe: Detected corproot network, turning on proxy."
+    proxy_set
+  else
+    # echo "proxy_probe: Detected normal network, turning off proxy."
+    proxy_unset
+  fi
+}
+
+# proxy_probe
 ##################################Aliases######################################
+
 
 # Color ls
 if [ -x "$(which lsd)" ]; then
-    alias ls='lsd'
+  alias ls='lsd'
 fi
 
 if [ -x "$(which xclip)" ]; then
-    #Copy to clipboard
-    alias xc="xclip -selection c"
+  #Copy to clipboard
+  alias xc="xclip -selection c"
 
-    #Paste from clipboard
-    alias xp="xclip -selection clipboard -o"
+  #Paste from clipboard
+  alias xp="xclip -selection clipboard -o"
 elif [ -x "$(which termux-clipboard-get)" ]; then 
-    alias xc="termux-clipboard-get"
-    alias xp="termux-clipboard-set"
+  alias xc="termux-clipboard-get"
+  alias xp="termux-clipboard-set"
 fi
 
 alias glances="glances 2> /dev/null"
