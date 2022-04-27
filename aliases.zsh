@@ -8,3 +8,5 @@ alias xp="xclip -selection clipboard -o"
 
 #Make the dirs command useful
 alias dirs="dirs -v"
+
+alias jenkins-cli="***REMOVED***"
