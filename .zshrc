@@ -65,7 +65,7 @@ setopt RM_STAR_WAIT
 setopt CORRECT
 
 # Set our username so the prompt hides it
-export DEFAULT_USER=`whoami`
+export DEFAULT_USER="$(whoami)"
 
 zstyle :omz:plugins:ssh-agent agent-forwarding on
 zstyle :omz:plugins:ssh-agent identities id_rsa
@@ -95,7 +95,7 @@ export DOCKER_BUILDKIT=1
 export COMPOSE_DOCKER_CLI_BUILD=1
 
 # Always opt out of the .NET telemetry
-DOTNET_CLI_TELEMETRY_OPTOUT=1
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 # This messes up highlight
 # zstyle :incremental list yes
@@ -169,11 +169,12 @@ if [[ -f ~/.fzf.zsh ]]; then
 fi
 
 #Enable Asynchronous Mode for suggestions
-ZSH_AUSOSUGGEST_USE_ASYNC=true
+export ZSH_AUSOSUGGEST_USE_ASYNC=true
 
 # Override oh-my-zsh history size
-HISTSIZE=100000
-SAVEHIST=100000
+export HISTSIZE=100000
+export SAVEHIST=${HISTSIZE}
+setopt EXTENDED_HISTORY
 
 # Stop using pushd like a crazy person
 unsetopt auto_pushd
@@ -187,8 +188,6 @@ if [[ -f ~/.vars.sh ]]; then
 fi
 
 ##################################Windows (is special) quirks######################################
-DOTNET_CLI_TELEMETRY_OPTOUT=1
-
 if [[ -d "/mnt/c/Windows" ]]; then
   export DISPLAY=$(/mnt/c/Windows/System32/ipconfig.exe | grep -A 5 "vEthernet (WSL)" | grep -oP '(?<=IPv4 Address(?:\.\s){11}:\s)((?:\d+\.){3}\d+)'):0.0
   export LIBGL_ALWAYS_INDIRECT=1
