@@ -182,10 +182,10 @@ unsetopt auto_pushd
 # Only enable this once you have zsh 5.7 or greater
 [[ "$COLORTERM" == (24bit|truecolor) || "${terminfo[colors]}" -eq '16777216' ]] || zmodload zsh/nearcolor
 
-##################################Load custom variables######################################
-if [[ -f ~/.vars.sh ]]; then
-  source ~/.vars.sh
-fi
+##################################Load custom files######################################
+for file in vars aliases func; do
+  [[ ! -f "${HOME}/.shell/${file}.sh" ]] || source "${HOME}/.shell/${file}.sh"
+done
 
 ##################################Windows (is special) quirks######################################
 if [[ -d "/mnt/c/Windows" ]]; then
@@ -199,81 +199,6 @@ if [[ -d "/mnt/c/Windows" ]]; then
     # disown
   # fi
 fi
-
-##################################Proxy######################################
-proxyUnset() {
-  unset http_proxy
-  unset HTTP_PROXY
-  unset https_proxy
-  unset HTTPS_PROXY
-  unset ftp_proxy
-  unset FTP_PROXY
-  unset all_proxy
-  unset ALL_PROXY
-  unset PIP_PROXY
-  unset no_proxy
-  unset NO_PROXY
-  unset MAVEN_OPTS
-}
-
-composeProxyAddr() {
-  if [[ $# != 3 ]] ; then
-    exit 1;
-  fi
-
-  local proxyProtocol="${1}"
-  local proxyHost="${2}"
-  local proxyPort="${3}"
-
-  echo "${proxyProtocol}://${proxyHost}:${proxyPort}"
-}
-
-proxySet() {
-  if [[ $# -lt 3 ]] ; then
-    echo "WTF?"
-    exit 1
-  fi
-
-  local proxyProtocol="${1}"
-  local proxyHost="${2}"
-  local proxyPort="${3}"
-  local noProxy="${4}"
-  local proxyAddr="$(composeProxyAddr ${proxyProtocol} ${proxyHost} ${proxyPort})"
-
-  export http_proxy="${proxyAddr}"
-  export HTTP_PROXY="${proxyAddr}"
-  export https_proxy="${proxyAddr}"
-  export HTTPS_PROXY="${proxyAddr}"
-  export ftp_proxy="${proxyAddr}"
-  export FTP_PROXY="${proxyAddr}"
-  export all_proxy="${proxyAddr}"
-  export ALL_PROXY="${proxyAddr}"
-  export PIP_PROXY="${proxyAddr}"
-  export no_proxy="${noProxy}"
-  export NO_PROXY="${noProxy}"
-  export MAVEN_OPTS="-Dhttp.proxyHost=${proxyHost} -Dhttp.proxyPort=${proxyPort} -Dhttps.proxyHost=${proxyHost} -Dhttps.proxyPort=${proxyPort}"
-}
-
-proxyProbe() {
-  if nc -z -w 3 ${PROXY_HOST} ${PROXY_PORT} &> /dev/null; then
-    # echo "proxyProbe: Detected corproot network, turning on proxy."
-    proxySet "${PROXY_PROTOCOL}" "${PROXY_HOST}" "${PROXY_PORT}" "${NOPROXY}"
-  else
-    # echo "proxyProbe: Detected normal network, turning off proxy."
-    proxyUnset
-  fi
-}
-
-awsProxy() {
-  local proxyArgs=("${AWS_PROXY_PROTOCOL}" "${AWS_PROXY_HOST}" "${AWS_PROXY_PORT}")
-  local proxyAddr="$(composeProxyAddr ${proxyArgs[@]})"
-
-  if [[ "${http_proxy}" != "${proxyAddr}" ]]; then
-    proxySet ${proxyArgs[@]}
-  else
-    proxyUnset
-  fi
-}
 
 ##################################Aliases######################################
 
