@@ -16,12 +16,9 @@ cmdExists() {
 # In case this fails: https://stackoverflow.com/a/48877084
 # sudo ln -sf /usr/share/terminfo/x/xterm-color /usr/share/terminfo/x/xterm-256color
 # or follow the terminfo steps for alacritty
-if cmdExists tmux; then
-  if [[ -z ${TMUX} ]]; then # if no session is started, start a new session
-    tmux attach 2> /dev/null || tmux
-  fi
+if cmdExists tmux && [[ -z "${TMUX}" ]]; then
+   tmux attach 2> /dev/null || tmux
 fi
-# cmdExists tmux && [[ -z ${TMUX} ]] && tmux attach 2> /dev/null || tmux
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
