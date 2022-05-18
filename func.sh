@@ -27,7 +27,7 @@ composeProxyAddr() {
 
 proxySet() {
   if [[ $# -lt 3 ]] ; then
-    echo "WTF?"
+    echo "Syntax: proxySet proxyProtocol proxyHost proxyPort [noProxy]"
     exit 1
   fi
 
@@ -70,4 +70,9 @@ awsProxy() {
   else
     proxyUnset
   fi
+}
+
+changeCluster() {
+  local clusterName="${1:-$AWS_CLUSTER_NAME}"
+  aws eks update-kubeconfig --name $clusterName --region $AWS_REGION
 }
