@@ -16,3 +16,4 @@ export JENKINS_API_TOKEN=""
 export JENKINS_URL=""
 
 export ENTERPRISE_DOMAIN=""
+export ALWAYS_PROXY_PROBE=""

@@ -188,7 +188,7 @@ done
 
 ##################################Configs######################################
 #Set up proxy if in VPN or not
-proxyProbe
+[[ "${ALWAYS_PROXY_PROBE}" == "true" ]] && proxyProbe
 
 ##################################Windows (is special) quirks######################################
 if [[ -d "/mnt/c/Windows" ]]; then
