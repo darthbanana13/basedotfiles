@@ -27,9 +27,8 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Make sure you have gawk installed otherwise zplug install will fail
 # Check if zplug is installed
-if [[ ! -d ~/.zplug ]]; then
+if [[ ! -d ~/.zplug ]] && cmdExists gawk; then
   git clone https://github.com/zplug/zplug ~/.zplug
   source ~/.zplug/init.zsh && zplug update --self
 fi
@@ -60,6 +59,9 @@ setopt RM_STAR_WAIT
 
 # Zsh has a spelling corrector
 setopt CORRECT
+
+# Make sure job control is enabled (default yes for interactive shells)
+setopt monitor
 
 # Set our username so the prompt hides it
 export DEFAULT_USER="$(whoami)"
@@ -184,6 +186,10 @@ for file in vars aliases func; do
   [[ ! -f "${HOME}/.shell/${file}.sh" ]] || source "${HOME}/.shell/${file}.sh"
 done
 
+##################################Configs######################################
+#Set up proxy if in VPN or not
+proxyProbe
+
 ##################################Windows (is special) quirks######################################
 if [[ -d "/mnt/c/Windows" ]]; then
   setDisplay
@@ -197,27 +203,6 @@ if [[ -d "/mnt/c/Windows" ]]; then
   # fi
 fi
 
-##################################Aliases######################################
-
-# Color ls
-cmdExists lsd && alias ls='lsd'
-
-if cmdExists xclip; then
-  #Copy to clipboard
-  alias xc="xclip -selection c"
-
-  #Paste from clipboard
-  alias xp="xclip -selection clipboard -o"
-elif cmdExists termux-clipboard-get; then 
-  alias xc="termux-clipboard-get"
-  alias xp="termux-clipboard-set"
-fi
-
-alias glances="glances 2> /dev/null"
-setopt monitor
-
-# Don't make using bash interactively impossible
-alias bash="PERMIT_BASH=true bash"
-
+##################################Misc######################################
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

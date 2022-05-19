@@ -74,7 +74,8 @@ awsProxy() {
 
 changeCluster() {
   local clusterName="${1:-$AWS_CLUSTER_NAME}"
-  aws eks update-kubeconfig --name $clusterName --region $AWS_REGION
+  export AWS_CLUSTER_NAME="${clusterName}"
+  aws eks update-kubeconfig --name "${AWS_CLUSTER_NAME}" --region "${AWS_REGION}"
 }
 
 setDisplay() {
