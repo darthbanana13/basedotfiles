@@ -124,7 +124,11 @@ do
   zplug "lib/${LIB}", from:oh-my-zsh, depth:1
 done;
 
-zplug "plugins/fancy-ctrl-z", from:oh-my-zsh, depth:1
+# Use cool oh my zsh plugins!
+for PLUGIN in fancy-ctrl-z sudo zsh-interactive-cd git-auto-fetch colorize catimg
+do
+  zplug "plugins/${PLUGIN}", from:oh-my-zsh, depth:1
+done;
 
 zplug 'junegunn/fzf', depth:1, hook-build:'./install --key-bindings --completion --no-update-rc --no-fish'
 zplug "zuxfoucault/colored-man-pages_mod", depth:1
