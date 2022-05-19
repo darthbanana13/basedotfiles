@@ -76,3 +76,19 @@ changeCluster() {
   local clusterName="${1:-$AWS_CLUSTER_NAME}"
   aws eks update-kubeconfig --name $clusterName --region $AWS_REGION
 }
+
+setDisplay() {
+  local ipconfig="/mnt/c/Windows/System32/ipconfig.exe"
+  local grepip=("grep" "-oP" '(?<=IPv4 Address(?:\.\s){11}:\s)((?:\d+\.){3}\d+)')
+
+  if [[ ! -d "/mnt/c/Windows" ]]; then
+    return
+  fi
+
+  local display=$("${ipconfig}" | grep -A 3 "${ENTERPRISE_DOMAIN}" | "${grepip[@]}")
+  if [[ -n "${display}" ]]; then
+    export DISPLAY="${display}:0.0"
+    return
+  fi
+  export DISPLAY=$("${ipconfig}" | grep -A 5 "vEthernet (WSL)" | "${grepip[@]}"):0.0
+}

@@ -186,7 +186,7 @@ done
 
 ##################################Windows (is special) quirks######################################
 if [[ -d "/mnt/c/Windows" ]]; then
-  export DISPLAY=$(/mnt/c/Windows/System32/ipconfig.exe | grep -A 5 "vEthernet (WSL)" | grep -oP '(?<=IPv4 Address(?:\.\s){11}:\s)((?:\d+\.){3}\d+)'):0.0
+  setDisplay
   export LIBGL_ALWAYS_INDIRECT=1
   
   # Start Docker daemon automatically when logging in
