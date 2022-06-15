@@ -14,7 +14,7 @@ proxyUnset() {
 }
 
 composeProxyAddr() {
-  if [[ $# != 3 ]] ; then
+  if (( $# != 3 )) ; then
     exit 1;
   fi
 
@@ -26,7 +26,7 @@ composeProxyAddr() {
 }
 
 proxySet() {
-  if [[ $# -lt 3 ]] ; then
+  if (( $# < 3 )) ; then
     echo "Syntax: proxySet proxyProtocol proxyHost proxyPort [noProxy]"
     exit 1
   fi
@@ -51,13 +51,41 @@ proxySet() {
   export MAVEN_OPTS="-Dhttp.proxyHost=${proxyHost} -Dhttp.proxyPort=${proxyPort} -Dhttps.proxyHost=${proxyHost} -Dhttps.proxyPort=${proxyPort}"
 }
 
+RESOLF='/etc/resolv.conf'
+changeDNS() {
+  if (( $# < 1 )) ; then
+    exit 1;
+  fi
+
+  local nameservers=("${(@s/,/)1}")
+
+  sudo truncate -s 0 "${RESOLF}"
+  for nameServerIP in ${nameservers[@]}; do
+    echo "nameserver ${nameServerIP}" | sudo tee -a "${RESOLF}" > /dev/null
+  done
+}
+
+changeWSLDNS() {
+  sudo chattr -i "${RESOLF}"
+  changeDNS "${1}"
+  sudo chattr +i "${RESOLF}"
+}
+
 proxyProbe() {
+  local matchDNS="dns"
+  local withDNS="${1}"
   if nc -z -w 3 ${PROXY_HOST} ${PROXY_PORT} &> /dev/null; then
-    # echo "proxyProbe: Detected corproot network, turning on proxy."
+    # echo "proxyProbe: Detected VPN, turning on proxy."
     proxySet "${PROXY_PROTOCOL}" "${PROXY_HOST}" "${PROXY_PORT}" "${NOPROXY}"
+    if [[ "${(L)withDNS}" = "${matchDNS}" ]]; then
+      changeWSLDNS "${PROXY_DNS},${NO_PROXY_DNS}"
+    fi
   else
     # echo "proxyProbe: Detected normal network, turning off proxy."
     proxyUnset
+    if [[ "${(L)withDNS}" = "${matchDNS}" ]]; then
+      changeWSLDNS "${NO_PROXY_DNS},${PROXY_DNS}"
+    fi
   fi
 }
 
