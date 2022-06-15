@@ -41,7 +41,6 @@ alias .="${EDITOR} ."
 ##################################Suffix alias######################################
 alias -s go="${EDITOR}"
 alias -s php="${EDITOR}"
-alias -s sh="${EDITOR}"
 alias -s md="${EDITOR}"
 alias -s py="${EDITOR}"
 alias -s yaml="${EDITOR}"
