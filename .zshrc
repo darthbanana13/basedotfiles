@@ -75,9 +75,13 @@ export PATH="${PATH}:${HOME}/.local/bin"
 if [[ -d "${HOME}/.composer/vendor/bin" ]]; then
   export PATH="${PATH}:${HOME}/.composer/vendor/bin"
 fi
-if [[ -d "${HOME}/.local/go/bin" ]]; then
-  export PATH="${PATH}:${HOME}/.local/go/bin"
+if cmdExists go; then
   export GOPATH="${HOME}/.local/go"
+  export GOBIN="${GOPATH}/bin"
+  export PATH="${PATH}:${GOBIN}"
+  if [[ ! -d "${GOBIN}" ]]; then
+    mkdir -p "${GOBIN}" 
+  fi
 fi
 if [[ -d "/usr/lib/jvm/java-16-openjdk-amd64" ]]; then
   export JAVA_HOME="/usr/lib/jvm/java-16-openjdk-amd64"
@@ -119,13 +123,13 @@ if cmdExists direnv; then
 fi
 
 # Use oh my zsh defaults because we <3 it!
-for LIB in compfix completion correction diagnostics directories functions git grep history key-bindings misc nvm prompt_info_functions spectrum termsupport theme-and-appearance ssh-agent kubectl direnv
+for LIB in compfix completion correction diagnostics directories functions git grep history key-bindings misc nvm prompt_info_functions spectrum termsupport theme-and-appearance
 do
   zplug "lib/${LIB}", from:oh-my-zsh, depth:1
 done;
 
 # Use cool oh my zsh plugins!
-for PLUGIN in fancy-ctrl-z sudo zsh-interactive-cd git-auto-fetch colorize catimg
+for PLUGIN in fancy-ctrl-z sudo zsh-interactive-cd git-auto-fetch colorize catimg kubectl direnv ssh-agent
 do
   zplug "plugins/${PLUGIN}", from:oh-my-zsh, depth:1
 done;
