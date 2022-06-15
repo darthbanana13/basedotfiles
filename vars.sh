@@ -2,6 +2,8 @@ export PROXY_PROTOCOL=""
 export PROXY_HOST=""
 export PROXY_PORT=""
 export NOPROXY=""
+export NO_PROXY_DNS=""
+export PROXY_DNS=""
 
 export AWS_PROXY_PROTOCOL=""
 export AWS_PROXY_HOST=""
