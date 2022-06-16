@@ -155,6 +155,14 @@ fi
 
 zplug load
 
+##################################fix/config for plugins######################################
+# For some reason some plugins put their completion list in
+# $ZSH_CACHE_DIR/completion but that dir does not exist by default, so create it here
+# Can't do this before zplug load because $ZSH & ZSH_CACHE_DIR is exported after load
+# TODO: Put this in a custom plugin
+mkdir -p "${ZSH_CACHE_DIR}completions"
+
+
 # Because fzf likes to make a file in the home directory, enable it manually here
 if [[ -f ~/.fzf.zsh ]]; then
   source ~/.fzf.zsh
