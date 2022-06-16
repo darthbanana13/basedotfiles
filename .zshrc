@@ -162,7 +162,6 @@ zplug load
 # TODO: Put this in a custom plugin
 mkdir -p "${ZSH_CACHE_DIR}completions"
 
-
 # Because fzf likes to make a file in the home directory, enable it manually here
 if [[ -f ~/.fzf.zsh ]]; then
   source ~/.fzf.zsh
@@ -210,13 +209,6 @@ done
 if [[ -d "/mnt/c/Windows" ]]; then
   setDisplay
   export LIBGL_ALWAYS_INDIRECT=1
-  
-  # Start Docker daemon automatically when logging in
-  # RUNNING=`ps aux | grep dockerd | grep -v grep`
-  # if [ -z "$RUNNING" ]; then
-    # sudo dockerd > /dev/null 2>&1 &
-    # disown
-  # fi
 fi
 
 ##################################Misc######################################

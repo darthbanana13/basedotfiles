@@ -121,3 +121,11 @@ setDisplay() {
   fi
   export DISPLAY=$("${ipconfig}" | grep -A 5 "vEthernet (WSL)" | "${grepip[@]}"):0.0
 }
+
+wslStartDocker() {
+  RUNNING=$(ps aux | grep dockerd | grep -v grep)
+  if [ -z "$RUNNING" ]; then
+    sudo dockerd > /dev/null 2>&1 &
+    disown
+  fi
+}
