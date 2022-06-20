@@ -82,7 +82,14 @@ if cmdExists go; then
   if [[ ! -d "${GOBIN}" ]]; then
     mkdir -p "${GOBIN}" 
   fi
+
+  # Install go plugins
+  # for MOD in 'antonmedv/fx@24.0.0' 'andreazorzetto/yh@v0.4.0'
+  # do
+    # go install "github.com/${MOD}"
+  # done;
 fi
+
 if [[ -d "/usr/lib/jvm/java-16-openjdk-amd64" ]]; then
   export JAVA_HOME="/usr/lib/jvm/java-16-openjdk-amd64"
 fi
@@ -116,26 +123,56 @@ zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 zplug "romkatv/powerlevel10k", as:theme, depth:1
 
 zplug "direnv/direnv", as:command, rename-to:direnv, use:"direnv", hook-build:"make"
-if cmdExists direnv; then
-  # supress DIRENV messages for instant prompt, comment the line below for debugging DIRENV
-  export DIRENV_LOG_FORMAT=
-  eval "$(direnv hook zsh)"
-fi
 
 # Use oh my zsh defaults because we <3 it!
-for LIB in compfix completion correction diagnostics directories functions git grep history key-bindings misc nvm prompt_info_functions spectrum termsupport theme-and-appearance
-do
-  zplug "lib/${LIB}", from:oh-my-zsh, depth:1
+local omzLibs=(
+  clipboard
+  compfix
+  completion
+  correction
+  diagnostics
+  directories
+  functions
+  git
+  grep
+  history
+  key-bindings
+  misc
+  nvm
+  prompt_info_functions
+  spectrum
+  termsupport
+  theme-and-appearance
+)
+
+for lib in "${omzLibs[@]}"; do
+  zplug "lib/${lib}", from:oh-my-zsh, depth:1
 done;
 
 # Use cool oh my zsh plugins!
-for PLUGIN in fancy-ctrl-z sudo zsh-interactive-cd git-auto-fetch colorize catimg kubectl direnv ssh-agent
-do
+local omzPlugins=(
+  catimg
+  colored-man-pages
+  colorize
+  command-not-found
+  direnv
+  fancy-ctrl-z
+  fd
+  git-auto-fetch
+  kubectl
+  man
+  #TODO: Setup agent
+  # ssh-agent
+  sudo
+  z
+  zsh-interactive-cd
+)
+
+for PLUGIN in "${omzPlugins[@]}"; do
   zplug "plugins/${PLUGIN}", from:oh-my-zsh, depth:1
 done;
 
 zplug 'junegunn/fzf', depth:1, hook-build:'./install --key-bindings --completion --no-update-rc --no-fish'
-zplug "zuxfoucault/colored-man-pages_mod", depth:1
 
 # Fish shell like autosuggestions
 zplug "zsh-users/zsh-autosuggestions", depth:1
@@ -161,6 +198,12 @@ zplug load
 # Can't do this before zplug load because $ZSH & ZSH_CACHE_DIR is exported after load
 # TODO: Put this in a custom plugin
 mkdir -p "${ZSH_CACHE_DIR}completions"
+
+if cmdExists direnv; then
+  # supress DIRENV messages for instant prompt, comment the line below for debugging DIRENV
+  export DIRENV_LOG_FORMAT=
+  eval "$(direnv hook zsh)"
+fi
 
 # Because fzf likes to make a file in the home directory, enable it manually here
 if [[ -f ~/.fzf.zsh ]]; then
@@ -188,7 +231,6 @@ export ZSH_AUSOSUGGEST_USE_ASYNC=true
 # Override oh-my-zsh history size
 export HISTSIZE=100000
 export SAVEHIST=${HISTSIZE}
-setopt EXTENDED_HISTORY
 
 # Stop using pushd like a crazy person
 unsetopt auto_pushd
