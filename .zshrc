@@ -41,19 +41,6 @@ export NVM_DIR="$HOME/.nvm"
 # TODO: Find a more reliable way of dealing with SSH agent
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 
-#SSH Reagent (http://tychoish.com/post/9-awesome-ssh-tricks/)
-ssh-reagent () {
-  for agent in /tmp/ssh-*/agent.*; do
-    export SSH_AUTH_SOCK=$agent
-      if ssh-add -l 2>&1 > /dev/null; then
-        echo Found working SSH Agent:
-        ssh-add -l
-        return
-      fi
-  done
-  echo Cannot find ssh agent - maybe you should reconnect and forward it?
-}
-
 #if you do a 'rm *', Zsh will give you a sanity check!
 setopt RM_STAR_WAIT
 
