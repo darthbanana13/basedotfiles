@@ -4,9 +4,9 @@
 export SHELL="$(which zsh)"
 
 # Set XDG Base directory specificatins
-export XDG_CONFIG_HOME=$HOME/.config
-export XDG_CACHE_HOME=$HOME/.cache
-export XDG_DATA_HOME=$HOME/.local/share
+export XDG_CONFIG_HOME="${HOME}/.config"
+export XDG_CACHE_HOME="${HOME}/.cache"
+export XDG_DATA_HOME="${HOME}/.local/share"
 
 cmdExists() {
   [[ -z "$1" ]] && echo "No argument supplied" && exit 1
@@ -233,7 +233,7 @@ for file in vars aliases func; do
   [[ ! -f "${HOME}/.shell/${file}.sh" ]] || source "${HOME}/.shell/${file}.sh"
 done
 
-##################################Configs######################################
+##################################Custom function Configs######################################
 #Set up proxy if in VPN or not
 [[ "${ALWAYS_PROXY_PROBE}" == "true" ]] && proxyProbe
 
