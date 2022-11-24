@@ -70,8 +70,9 @@ if cmdExists go; then
     mkdir -p "${GOBIN}" 
   fi
 
+  # TODO: Make an associative array and test if all the binaries exist
   # Install go plugins
-  # for MOD in 'antonmedv/fx@24.0.0' 'andreazorzetto/yh@v0.4.0'
+  # for MOD in 'antonmedv/fx@24.0.0' 'andreazorzetto/yh@v0.4.0' 'cpuguy83/go-md2man/v2@v2.0.2'
   # do
     # go install "github.com/${MOD}"
   # done;
