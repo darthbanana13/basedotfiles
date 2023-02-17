@@ -113,7 +113,10 @@ zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 
 zplug "romkatv/powerlevel10k", as:theme, depth:1
 
-zplug "direnv/direnv", as:command, rename-to:direnv, use:"direnv", hook-build:"make"
+# Can't compile direnv without go
+if cmdExists go; then
+  zplug "direnv/direnv", as:command, rename-to:direnv, use:"direnv", at:v2.23.2 hook-build:"make"
+fi
 
 # Use oh my zsh defaults because we <3 it!
 local omzLibs=(
@@ -247,3 +250,9 @@ fi
 ##################################Misc######################################
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+PATH="/home/revan/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/home/revan/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/home/revan/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/home/revan/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/home/revan/perl5"; export PERL_MM_OPT;

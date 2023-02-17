@@ -131,7 +131,7 @@ wslStartDocker() {
 }
 
 #SSH Reagent (http://tychoish.com/post/9-awesome-ssh-tricks/)
-ssh-reagent () {
+sshReagent () {
   for agent in /tmp/ssh-*/agent.*; do
     export SSH_AUTH_SOCK=$agent
       if ssh-add -l 2>&1 > /dev/null; then
@@ -141,4 +141,8 @@ ssh-reagent () {
       fi
   done
   echo Cannot find ssh agent - maybe you should reconnect and forward it?
+}
+
+sshAgent() {
+  pgrep -x ssh-agent &> /dev/null && sshReagent &> /dev/null || eval $(ssh-agent) &> /dev/null
 }
