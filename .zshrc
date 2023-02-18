@@ -81,7 +81,7 @@ fi
 if cmdExists java; then
   # Get the symlink target from java executable in PATH, then calculate JAVA_HOME
   # by removing '/bin/java' from the end of the path which readlink gives
-  export JAVA_HOME="dirname $(dirname $(readlink -f $(which java)))"
+  export JAVA_HOME="$(dirname $(dirname $(readlink -f $(which java))))"
 fi
 
 if [[ -d "${HOME}/.poetry/bin" ]]; then
