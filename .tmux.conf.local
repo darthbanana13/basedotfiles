@@ -404,7 +404,9 @@ set -as terminal-features ",alacritty:RGB,xterm-256color:RGB,gnome*:RGB"
 
 # set Zsh as your default Tmux shell
 # if not then Oh-my-tmux will not prefix the SHELL variable with /
-set-option -g default-shell /usr/bin/zsh
+# universal solution for systems where the shell might be in a different place
+run-shell 'tmux setenv -g ZSH_PATH $(which zsh)'
+run 'set-option -g default-shell $ZSH_PATH'
 
 # -- custom variables ----------------------------------------------------------
 
