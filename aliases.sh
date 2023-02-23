@@ -23,6 +23,12 @@ cmdExists lsd && alias ls='lsd'
 # Don' make using bash interactively impossible
 alias bash="PERMIT_BASH=true bash"
 
+#Make sure we make an alias from vi & vim to nvim here, because a symlink might not be installed automatically for nvim
+if cmdExists nvim; then
+  alias vi=nvim
+  alias vim=nvim
+fi
+
 #Edit .zshrc
 alias ez="${EDITOR} ${HOME}/.zshrc"
 
