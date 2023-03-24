@@ -32,6 +32,9 @@ fi
 # Don't see any reason why we should not use a better top utility if it exists
 cmdExists btop && alias top='btop'
 
+# Use cat on steroids if it exists
+cmdExists bat && alias cat='bat'
+
 #Edit .zshrc
 alias ez="${EDITOR} ${HOME}/.zshrc"
 
