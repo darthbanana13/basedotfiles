@@ -29,6 +29,9 @@ if cmdExists nvim; then
   alias vim=nvim
 fi
 
+# Don't see any reason why we should not use a better top utility if it exists
+cmdExists btop && alias top='btop'
+
 #Edit .zshrc
 alias ez="${EDITOR} ${HOME}/.zshrc"
 
