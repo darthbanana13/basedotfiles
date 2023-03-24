@@ -105,7 +105,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
-#Start Radu
+#Customizations
 
 export AG_NO_HIST="false"
 export THEME=$HOME/.bash/themes/agnoster-bash/agnoster.bash
@@ -125,17 +125,8 @@ export NVM_DIR="$HOME/.nvm"
 
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 
-#SSH Reagent (http://tychoish.com/post/9-awesome-ssh-tricks/)
-ssh-reagent () {
-  for agent in /tmp/ssh-*/agent.*; do
-      export SSH_AUTH_SOCK=$agent
-      if ssh-add -l 2>&1 > /dev/null; then
-         echo Found working SSH Agent:
-         ssh-add -l
-         return
-      fi
-  done
-  echo Cannot find ssh agent - maybe you should reconnect and forward it?
-}
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-. "$HOME/.cargo/env"
+# TODO: Better unify the settings for bash & zsh
+##################################Load custom files######################################
+for file in vars aliases func; do
+  [[ ! -f "${HOME}/.shell/${file}.sh" ]] || source "${HOME}/.shell/${file}.sh"
+done
