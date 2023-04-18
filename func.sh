@@ -123,7 +123,8 @@ setDisplay() {
 }
 
 wslStartDocker() {
-  RUNNING=$(ps aux | grep dockerd | grep -v grep)
+  ! cmdExists dockerd && return 1
+  RUNNING=$(ps aux | grep '[d]ockerd' )
   if [ -z "$RUNNING" ]; then
     sudo -E dockerd > /dev/null 2>&1 &
     disown
@@ -131,7 +132,8 @@ wslStartDocker() {
 }
 
 wslStartK3s() {
-  RUNNING=$(ps aux | grep k3s | grep -v grep)
+  ! cmdExists dockerd && return 1
+  RUNNING=$(ps aux | grep '[k]3s' )
   if [ -z "$RUNNING" ]; then
     sudo -E k3s server > /dev/null 2>&1 &
     disown
