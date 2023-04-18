@@ -130,6 +130,14 @@ wslStartDocker() {
   fi
 }
 
+wslStartK3s() {
+  RUNNING=$(ps aux | grep k3s | grep -v grep)
+  if [ -z "$RUNNING" ]; then
+    sudo -E k3s server > /dev/null 2>&1 &
+    disown
+  fi
+}
+
 #SSH Reagent (http://tychoish.com/post/9-awesome-ssh-tricks/)
 sshReagent () {
   for agent in /tmp/ssh-*/agent.*; do
