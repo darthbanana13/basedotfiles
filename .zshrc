@@ -245,8 +245,8 @@ done
 if [[ -d "/mnt/c/Windows" ]]; then
   setDisplay
   export LIBGL_ALWAYS_INDIRECT=1
-  (wslStartDocker &)
-  (wslStartK3s &)
+  # (wslStartDocker &)
+  # (wslStartK3s &)
 fi
 
 ##################################Misc######################################
