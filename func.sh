@@ -106,7 +106,7 @@ changeCluster() {
   aws eks update-kubeconfig --name "${AWS_CLUSTER_NAME}" --region "${AWS_REGION}"
 }
 
-setDisplay() {
+wslSetDisplay() {
   local ipconfig="/mnt/c/Windows/System32/ipconfig.exe"
   local grepip=("grep" "-oP" '(?<=IPv4 Address(?:\.\s){11}:\s)((?:\d+\.){3}\d+)')
 

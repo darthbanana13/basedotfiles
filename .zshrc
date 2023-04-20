@@ -243,7 +243,7 @@ done
 
 ##################################Windows (is special) quirks######################################
 if [[ -d "/mnt/c/Windows" ]]; then
-  setDisplay
+  wslSetDisplay
   export LIBGL_ALWAYS_INDIRECT=1
   # (wslStartDocker &)
   # (wslStartK3s &)
