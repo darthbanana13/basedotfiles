@@ -122,22 +122,39 @@ wslSetDisplay() {
   export DISPLAY=$("${ipconfig}" | grep -A 5 "vEthernet (WSL)" | "${grepip[@]}"):0.0
 }
 
+# This function is written in a zsh specific way, because arrays/hash maps in zsh are more powerful than bash
+startSingleProcess() {
+  local executableName="${1}"
+  local running=$(ps aux | grep "[${executableName[1,1]}]${executableName[2,-1]}")
+  [[ -n "${running}" ]] && return 0
+  sudo -E ${@} > /dev/null 2>&1 &
+}
+
+startSingleProcessIfExists() {
+  local executableName="${1}"
+  ! cmdExists "${executableName}" && return 1
+  startSingleProcess ${@}
+}
+
+userStartProcess() {
+  startSingleProcessIfExists ${@} && return 1
+  disown
+}
+
+wslBackgroundDocker() {
+  startSingleProcessIfExists dockerd
+}
+
 wslStartDocker() {
-  ! cmdExists dockerd && return 1
-  RUNNING=$(ps aux | grep '[d]ockerd' )
-  if [ -z "$RUNNING" ]; then
-    sudo -E dockerd > /dev/null 2>&1 &
-    disown
-  fi
+  userStartProcess dockerd
+}
+
+wslBackgroundK3s() {
+  startSingleProcessIfExists k3s server
 }
 
 wslStartK3s() {
-  ! cmdExists dockerd && return 1
-  RUNNING=$(ps aux | grep '[k]3s' )
-  if [ -z "$RUNNING" ]; then
-    sudo -E k3s server > /dev/null 2>&1 &
-    disown
-  fi
+  userStartProcess k3s server
 }
 
 #SSH Reagent (http://tychoish.com/post/9-awesome-ssh-tricks/)
