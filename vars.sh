@@ -19,3 +19,5 @@ export JENKINS_URL=""
 
 export ENTERPRISE_DOMAIN=""
 export ALWAYS_PROXY_PROBE=""
+
+export K3S_KUBECONFIG_MODE="644"
