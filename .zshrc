@@ -241,12 +241,13 @@ done
 #Set up proxy if in VPN or not
 [[ "${ALWAYS_PROXY_PROBE}" == "true" ]] && proxyProbe
 
+# Load Angular CLI autocompletion.
+# source <(ng completion script)
+
 ##################################Windows (is special) quirks######################################
 if [[ -d "/mnt/c/Windows" ]]; then
   wslSetDisplay
   export LIBGL_ALWAYS_INDIRECT=1
-  # (wslStartDocker &)
-  # (wslStartK3s &)
   (wslBackgroundDocker &)
   (wslBackgroundK3s &)
 fi
