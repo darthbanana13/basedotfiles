@@ -247,6 +247,8 @@ if [[ -d "/mnt/c/Windows" ]]; then
   export LIBGL_ALWAYS_INDIRECT=1
   # (wslStartDocker &)
   # (wslStartK3s &)
+  (wslBackgroundDocker &)
+  (wslBackgroundK3s &)
 fi
 
 ##################################Misc######################################
