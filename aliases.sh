@@ -48,13 +48,11 @@ alias ev="${EDITOR} ${HOME}/.shell/vars.sh"
 alias ea="${EDITOR} ${HOME}/.shell/aliases.sh"
 
 #Open editor in current directory
-alias .="${EDITOR} ."
+alias e="${EDITOR} ."
 
 ##################################Suffix alias######################################
 alias -s go="${EDITOR}"
-alias -s php="${EDITOR}"
 alias -s md="${EDITOR}"
-alias -s py="${EDITOR}"
 alias -s yaml="${EDITOR}"
 alias -s yml="${EDITOR}"
 alias -s js="${EDITOR}"
