@@ -127,31 +127,35 @@ startSingleProcess() {
   local executableName="${1}"
   local running=$(ps aux | grep "[${executableName[1,1]}]${executableName[2,-1]}")
   [[ -n "${running}" ]] && return 0
-  sudo -E ${@} > /dev/null 2>&1 &
+  # Probably could be done with disown or setsid, but pdetach is a lot more convenient
+  pdetach sudo -E -H ${@}
 }
 
 startSingleProcessIfExists() {
   local executableName="${1}"
-  ! cmdExists "${executableName}" && return 1
+  cmdExists "${executableName}" || return 1
   startSingleProcess ${@}
 }
 
 userStartProcess() {
-  startSingleProcessIfExists ${@} && return 1
-  disown
+  startSingleProcessIfExists ${@} || return 1
+  # disown
 }
 
-wslBackgroundDocker() {
-  startSingleProcessIfExists dockerd
-}
+# wslBackgroundDocker() {
+  # startSingleProcessIfExists dockerd
+# }
 
 wslStartDocker() {
   userStartProcess dockerd
+  # dockerd doesn't check if you're running it from an interactive terminal, so it mangles your prompt after
+  # start by setting it to raw, thanks Docker! Undo the setting after starting it.
+  stty -raw
 }
 
-wslBackgroundK3s() {
-  startSingleProcessIfExists k3s server
-}
+# wslBackgroundK3s() {
+  # startSingleProcessIfExists k3s server
+# }
 
 wslStartK3s() {
   userStartProcess k3s server
