@@ -252,8 +252,8 @@ done
 if [[ -d "/mnt/c/Windows" ]]; then
   wslSetDisplay
   export LIBGL_ALWAYS_INDIRECT=1
-  (wslBackgroundDocker &)
-  (wslBackgroundK3s &)
+  # (wslBackgroundDocker &)
+  # (wslBackgroundK3s &)
 fi
 
 ##################################Misc######################################
