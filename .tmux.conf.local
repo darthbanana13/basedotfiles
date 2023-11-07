@@ -392,7 +392,6 @@ tmux_conf_uninstall_plugins_on_reload=true
 #set -g @continuum-restore 'on'
 
 # -- my customization ----------------------------------------------------------
-set -g @plugin 'christoomey/vim-tmux-navigator'
 set -g @plugin 'CrispyConductor/tmux-copy-toolkit'
 set -g @plugin 'tmux-plugins/tmux-yank'
 
@@ -407,6 +406,27 @@ set -as terminal-features ",alacritty:RGB,xterm-256color:RGB,gnome*:RGB"
 # universal solution for systems where the shell might be in a different place
 run-shell 'tmux setenv -g ZSH_PATH $(which zsh)'
 run 'set-option -g default-shell $ZSH_PATH'
+
+# Smart pane switching with awareness of Vim splits.
+# See: https://github.com/christoomey/vim-tmux-navigator
+# &: https://github.com/alexghergh/nvim-tmux-navigation
+
+# decide whether we're in a Vim process
+is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
+    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
+
+bind-key -n 'C-h' if-shell "$is_vim" 'send-keys C-h' 'select-pane -L'
+bind-key -n 'C-j' if-shell "$is_vim" 'send-keys C-j' 'select-pane -D'
+bind-key -n 'C-k' if-shell "$is_vim" 'send-keys C-k' 'select-pane -U'
+bind-key -n 'C-l' if-shell "$is_vim" 'send-keys C-l' 'select-pane -R'
+
+bind-key -T copy-mode-vi 'C-h' select-pane -L
+bind-key -T copy-mode-vi 'C-j' select-pane -D
+bind-key -T copy-mode-vi 'C-k' select-pane -U
+bind-key -T copy-mode-vi 'C-l' select-pane -R
+
+# Bind clear screen to something else:
+bind C-l send-keys 'C-l'
 
 # -- custom variables ----------------------------------------------------------
 
