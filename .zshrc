@@ -119,7 +119,7 @@ zplug "romkatv/powerlevel10k", as:theme, depth:1
 
 # Can't compile direnv without go
 if cmdExists go; then
-  zplug "direnv/direnv", as:command, rename-to:direnv, use:"direnv", at:v2.23.2 hook-build:"make"
+  zplug "direnv/direnv", as:command, rename-to:direnv, use:"direnv", at:v2.23.3 hook-build:"make"
 fi
 
 # Use oh my zsh defaults because we <3 it!
