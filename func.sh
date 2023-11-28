@@ -15,7 +15,7 @@ proxyUnset() {
 
 composeProxyAddr() {
   if (( $# != 3 )) ; then
-    exit 1;
+    return 1;
   fi
 
   local proxyProtocol="${1}"
@@ -28,7 +28,7 @@ composeProxyAddr() {
 proxySet() {
   if (( $# < 3 )) ; then
     echo "Syntax: proxySet proxyProtocol proxyHost proxyPort [noProxy]"
-    exit 1
+    return 1
   fi
 
   local proxyProtocol="${1}"
@@ -54,7 +54,7 @@ proxySet() {
 RESOLF='/etc/resolv.conf'
 changeDNS() {
   if (( $# < 1 )) ; then
-    exit 1;
+    return 1;
   fi
 
   local nameservers=("${(@s/,/)1}")
