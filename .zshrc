@@ -248,14 +248,6 @@ done
 # Load Angular CLI autocompletion.
 # source <(ng completion script)
 
-##################################Windows (is special) quirks######################################
-if [[ -d "/mnt/c/Windows" ]]; then
-  wslSetDisplay
-  export LIBGL_ALWAYS_INDIRECT=1
-  # (wslBackgroundDocker &)
-  # (wslBackgroundK3s &)
-fi
-
 ##################################Misc######################################
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
