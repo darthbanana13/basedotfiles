@@ -42,7 +42,7 @@ export NVM_DIR="$HOME/.nvm"
 [[ -s "$NVM_DIR/bash_completion" ]] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # TODO: Find a more reliable way of dealing with SSH agent
-export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+# export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 
 #if you do a 'rm *', Zsh will give you a sanity check!
 setopt RM_STAR_WAIT
@@ -56,8 +56,14 @@ setopt monitor
 # Set our username so the prompt hides it
 export DEFAULT_USER="$(whoami)"
 
-zstyle :omz:plugins:ssh-agent agent-forwarding on
-zstyle :omz:plugins:ssh-agent identities id_rsa
+# Set ssh-agent params
+zstyle :omz:plugins:ssh-agent agent-forwarding yes
+zstyle :omz:plugins:ssh-agent helper ksshaskpass # cache pass
+zstyle :omz:plugins:ssh-agent identities id_ed25519
+zstyle :omz:plugins:ssh-agent lifetime 1h
+zstyle :omz:plugins:ssh-agent quiet yes # for Powerlevel10k instant prompt
+zstyle :omz:plugins:ssh-agent lazy yes # prompt & load after first use of the key
+zstyle :omz:plugins:ssh-agent ssh-add-args -K -c -a ${XDG_RUNTIME_DIR}ssh-auth
 
 # Add local bin directories to PATH
 export PATH="${PATH}:${HOME}/.local/bin"
@@ -162,8 +168,7 @@ local omzPlugins=(
   git-auto-fetch
   kubectl
   man
-  #TODO: Setup agent
-  # ssh-agent
+  ssh-agent
   sudo
   z
   zsh-interactive-cd
