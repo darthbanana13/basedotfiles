@@ -41,9 +41,6 @@ export NVM_DIR="$HOME/.nvm"
 [[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"  # This loads nvm
 [[ -s "$NVM_DIR/bash_completion" ]] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# TODO: Find a more reliable way of dealing with SSH agent
-# export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
-
 #if you do a 'rm *', Zsh will give you a sanity check!
 setopt RM_STAR_WAIT
 
@@ -58,12 +55,9 @@ export DEFAULT_USER="$(whoami)"
 
 # Set ssh-agent params
 zstyle :omz:plugins:ssh-agent agent-forwarding yes
-# zstyle :omz:plugins:ssh-agent helper ksshaskpass # The only way on opening a terminal
-zstyle :omz:plugins:ssh-agent identities id_ed25519
 zstyle :omz:plugins:ssh-agent lifetime 1h
 zstyle :omz:plugins:ssh-agent quiet yes # for Powerlevel10k instant prompt
 zstyle :omz:plugins:ssh-agent lazy yes # prompt & load after first use of the key
-
 
 # Add local bin directories to PATH
 export PATH="${PATH}:${HOME}/.local/bin"
@@ -169,6 +163,8 @@ local omzPlugins=(
   kubectl
   man
   ssh-agent
+  # TODO: Figure out forwarding of GPG keys
+  # gpg-agent
   sudo
   z
   zsh-interactive-cd
