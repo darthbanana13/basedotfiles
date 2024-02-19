@@ -8,10 +8,8 @@ export XDG_CONFIG_HOME="${HOME}/.config"
 export XDG_CACHE_HOME="${HOME}/.cache"
 export XDG_DATA_HOME="${HOME}/.local/share"
 
-if [[ -z "${XDG_RUNTIME_DIR}" ]]; then
-  # XDG_RUNTIME_DIR should generally default to
-  export XDG_RUNTIME_DIR="/run/user/$(id -u)/"
-fi
+# XDG_RUNTIME_DIR should generally default to
+[[ -z "${XDG_RUNTIME_DIR}" ]] && export XDG_RUNTIME_DIR="/run/user/$(id -u)/"
 
 cmdExists() {
   [[ -z "$1" ]] && echo "No argument supplied" && exit 1
