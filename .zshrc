@@ -58,12 +58,12 @@ export DEFAULT_USER="$(whoami)"
 
 # Set ssh-agent params
 zstyle :omz:plugins:ssh-agent agent-forwarding yes
-zstyle :omz:plugins:ssh-agent helper ksshaskpass # cache pass
+# zstyle :omz:plugins:ssh-agent helper ksshaskpass # The only way on opening a terminal
 zstyle :omz:plugins:ssh-agent identities id_ed25519
 zstyle :omz:plugins:ssh-agent lifetime 1h
 zstyle :omz:plugins:ssh-agent quiet yes # for Powerlevel10k instant prompt
 zstyle :omz:plugins:ssh-agent lazy yes # prompt & load after first use of the key
-zstyle :omz:plugins:ssh-agent ssh-add-args -K -c -a ${XDG_RUNTIME_DIR}ssh-auth
+
 
 # Add local bin directories to PATH
 export PATH="${PATH}:${HOME}/.local/bin"

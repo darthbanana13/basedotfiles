@@ -20,6 +20,9 @@ fi
 # Color ls
 cmdExists lsd && alias ls='lsd'
 
+# For enabling lazy loading of ssh keys
+alias ssh='ssh -o AddKeysToAgent=yes'
+
 # Don' make using bash interactively impossible
 alias bash="PERMIT_BASH=true bash"
 
