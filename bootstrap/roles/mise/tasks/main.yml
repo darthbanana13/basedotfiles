@@ -1,0 +1,45 @@
+---
+- name: Check if config is installed
+  ansible.builtin.command: which mise
+  ignore_errors: True
+  register: is_installed
+
+- name: Install mise
+  when: is_installed.rc != 0
+  block:
+    - name: Set appropiate facts
+      ansible.builtin.set_fact:
+        system_arch: "{{ 'x64' if ansible_architecture == 'x86_64' else 'arm64' }}"
+
+    - name: Download mise
+      ansible.builtin.get_url:
+        url: "https://github.com/jdx/mise/releases/download/{{ mise.version }}/mise-{{ mise.version }}-linux-{{ system_arch }}.tar.xz"
+        dest: /tmp/mise.tar.xz
+        checksum: "sha512:https://github.com/jdx/mise/releases/download/{{ mise.version }}/SHASUMS512.txt"
+        mode: "0555"
+
+    - name: Extract mise archive
+      ansible.builtin.unarchive:
+        src: /tmp/mise.tar.xz
+        dest: /tmp
+        remote_src: yes
+
+    - name: Install mise
+      become: yes
+      ansible.builtin.copy:
+        src: "/tmp/mise{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: "{{ item.mode }}"
+      with_items:
+        - { src: /bin/mise, dest: /usr/local/bin/mise, mode: '755' }
+        - { src: /man/man1/mise.1, dest: /usr/local/share/man/man1/mise.1, mode: '644' }
+
+    - name: Clean
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - /tmp/mise.tar.xz
+        - /tmp/mise

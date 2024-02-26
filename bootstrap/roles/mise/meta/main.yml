@@ -1,0 +1,15 @@
+galaxy_info:
+  author: darthrevan13
+  description: Install mise
+  license: GPL-3.0-only
+  min_ansible_version: 2.15
+  platforms:
+  - name: Ubuntu
+    versions:
+      - '24.04'
+  - name: Raspberry PI OS 64-bit
+    versions:
+      - '11 (bullseye)'
+  galaxy_tags:
+    - mise
+dependencies: []
