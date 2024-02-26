@@ -1,0 +1,3 @@
+neovim:
+  version: v0.9.5
+  plugin_install: "Lazy install"
