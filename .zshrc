@@ -30,12 +30,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Check if zplug is installed
-if [[ ! -d ~/.zplug ]] && cmdExists gawk; then
-  git clone https://github.com/zplug/zplug ~/.zplug
-  source ~/.zplug/init.zsh && zplug update --self
-fi
-
 # Node Version manager for managing node versions
 export NVM_DIR="$HOME/.nvm"
 [[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -107,7 +101,11 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1
 # zle -N incremental-complete-word
 # bindkey '^X' incremental-complete-word
 
-# Essential for zplug
+# Check if zplug is installed
+if [[ ! -d ~/.zplug ]] && cmdExists gawk; then
+  git clone https://github.com/zplug/zplug ~/.zplug
+fi
+
 source ~/.zplug/init.zsh
 
 ##################################zsh plugins######################################
