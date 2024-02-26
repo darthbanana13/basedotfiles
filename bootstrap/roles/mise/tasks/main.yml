@@ -7,7 +7,7 @@
 - name: Install mise
   when: is_installed.rc != 0
   block:
-    - name: Set appropiate facts
+    - name: Get architecture
       ansible.builtin.set_fact:
         system_arch: "{{ 'x64' if ansible_architecture == 'x86_64' else 'arm64' }}"
 

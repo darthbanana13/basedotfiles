@@ -9,14 +9,36 @@
   when: is_installed.rc == 0
   register: version
 
+- name: If latest check for updates
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/neovim/neovim/releases/latest
+    return_content: true
+  when: neovim.version == 'latest'
+  register: latest_info
+
+- name: Set version string
+  ansible.builtin.set_fact:
+    ver: "{{ latest_info.json.tag_name if neovim.version == 'latest' else neovim.version }}"
+
 - name: Install neovim
-  when: version.stdout_lines[0] != 'NVIM ' + versions.neovim
+  when: version.stdout_lines[0] != 'NVIM ' + ver
   block:
+    - name: Get release info
+      ansible.builtin.uri:
+        url: "https://api.github.com/repos/neovim/neovim/releases/tags/{{ ver }}"
+        return_content: true
+      register: tag_info
+
+    - name: Get download link
+      ansible.builtin.set_fact:
+        download_url: "{{ tag_info.json.assets | community.general.json_query('[?content_type==`application/vnd.appimage`].browser_download_url') | join('') }}"
+
     - name: Download neovim
       ansible.builtin.get_url:
-        url: "https://github.com/neovim/neovim/releases/download/{{ neovim.version }}/nvim.appimage"
+        url: "{{ download_url }}"
         dest: /usr/local/bin/nvim.appimage
         mode: "0555"
+        checksum: "sha256:{{ download_url }}.sha256sum"
       become: true
 
     - name: Install pip
@@ -33,7 +55,7 @@
         extra_args: --user
 
 - name: After first install
-  when: is_installed.rc == 0
+  when: is_installed.rc != 0
   block:
     - name: Make sure neovim is the default editor
       community.general.alternatives:
