@@ -1,3 +1,4 @@
 - hosts: dev
   roles:
     - mise
+    - neovim
