@@ -1,7 +1,8 @@
 ---
-- name: Check if config is installed
+- name: Check if mise is installed
   ansible.builtin.command: which mise
-  ignore_errors: True
+  ignore_errors: true
+  changed_when: false
   register: is_installed
 
 - name: Install mise
@@ -22,10 +23,10 @@
       ansible.builtin.unarchive:
         src: /tmp/mise.tar.xz
         dest: /tmp
-        remote_src: yes
+        remote_src: true
 
     - name: Install mise
-      become: yes
+      become: true
       ansible.builtin.copy:
         src: "/tmp/mise{{ item.src }}"
         dest: "{{ item.dest }}"
@@ -36,6 +37,7 @@
         - { src: /bin/mise, dest: /usr/local/bin/mise, mode: '755' }
         - { src: /man/man1/mise.1, dest: /usr/local/share/man/man1/mise.1, mode: '644' }
 
+  always:
     - name: Clean
       ansible.builtin.file:
         path: "{{ item }}"
