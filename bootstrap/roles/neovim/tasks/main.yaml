@@ -1,11 +1,13 @@
 ---
 - name: Check if neovim is installed
   ansible.builtin.command: which nvim
-  ignore_errors: True
+  changed_when: false
+  ignore_errors: true
   register: is_installed
 
 - name: Check installed version of neovim
   ansible.builtin.command: nvim --version
+  changed_when: false
   when: is_installed.rc == 0
   register: version
 
@@ -29,17 +31,64 @@
         return_content: true
       register: tag_info
 
-    - name: Get download link
-      ansible.builtin.set_fact:
-        download_url: "{{ tag_info.json.assets | community.general.json_query('[?content_type==`application/vnd.appimage`].browser_download_url') | join('') }}"
+    - name: Appimage install
+      when: ansible_architecture == 'x86_64'
+      block:
+        - name: Get Appimage download link
+          ansible.builtin.set_fact:
+            download_url: >-
+              {{
+                tag_info.json.assets |
+                community.general.json_query('[?content_type==`application/vnd.appimage`].browser_download_url') |
+                join('')
+              }}
 
-    - name: Download neovim
-      ansible.builtin.get_url:
-        url: "{{ download_url }}"
-        dest: /usr/local/bin/nvim.appimage
-        mode: "0555"
-        checksum: "sha256:{{ download_url }}.sha256sum"
-      become: true
+        - name: Download neovim appimage
+          ansible.builtin.get_url:
+            url: "{{ download_url }}"
+            dest: /usr/local/bin/nvim.appimage
+            mode: "0555"
+            checksum: "sha256:{{ download_url }}.sha256sum"
+          become: true
+
+    - name: Source compile
+      when: ansible_architecture != 'x86_64'
+      block:
+        - name: Install build prerequisites
+          ansible.builtin.apt:
+            pkg:
+              - ninja-build
+              - gettext
+              - cmake
+              - unzip
+              - curl
+              - git
+
+        - name: Clone neovim repo
+          ansible.builtin.git:
+            repo: https://github.com/neovim/neovim.git
+            dest: /tmp/neovim
+            single_branch: true
+            depth: 1
+            version: "{{ ver }}"
+
+        - name: Compile neovim
+          community.general.make:
+            chdir: /tmp/neovim
+            params:
+              CMAKE_BUILD_TYPE: Release
+
+        - name: Install neovim
+          community.general.make:
+            chdir: /tmp/neovim
+            target: install
+          become: true
+
+      always:
+        - name: Clean
+          ansible.builtin.file:
+            path: /tmp/neovim
+            state: absent
 
     - name: Install pip
       ansible.builtin.apt:
@@ -63,7 +112,7 @@
         path: /usr/local/bin/nvim.appimage
         priority: 110
       become: true
-      ignore_errors: True
+      ignore_errors: true
       with_items:
         - ex
         - vi
@@ -74,5 +123,7 @@
         - nvim
         - neovim
 
+      # TODO: I haven't found a good way for change_when to reflect when plugins are actually installed
     - name: Install plugins
       ansible.builtin.command: "nvim '+silent! {{ neovim.plugin_install }}' +qal!"
+      changed_when: false
