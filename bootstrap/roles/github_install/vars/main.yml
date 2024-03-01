@@ -1,0 +1,14 @@
+---
+app:
+  repo_name: sharkdp/fd
+  version: latest
+  name: fd
+  # artifacts_json_query: '[?starts_with(name, `fd_`) && ends_with(name, `amd64.deb`)].browser_download_url'
+  artifacts_json_query: '[?starts_with(name, `fd-`) && ends_with(name, `-x86_64-unknown-linux-gnu.tar.gz`)].browser_download_url'
+  version_shell_cmd: "echo v$(fd --version | awk '{print $2}')"
+  # install_method: source
+  # prerequisite_packages:
+  #   - cargo
+  # make_steps:
+  #   - { target: '', params: { CMAKE_BUILD_RELEASE: Release } }
+  #   - { target: install }
