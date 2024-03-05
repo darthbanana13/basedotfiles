@@ -1,0 +1,17 @@
+galaxy_info:
+  author: darthrevan13
+  description: Install the rust toolchain
+  license: GPL-3.0-only
+  min_ansible_version: '2.15'
+  platforms:
+    - name: Ubuntu
+      versions:
+        - jammy
+    - name: Debian
+      versions:
+        - bullseye
+  galaxy_tags:
+    - rust
+    - cargo
+    - rustup
+dependencies: []

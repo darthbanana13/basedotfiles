@@ -1,0 +1,48 @@
+---
+- name: Check if rustup is installed
+  ansible.builtin.command: which rustup
+  ignore_errors: true
+  changed_when: false
+  register: is_installed
+
+# Check https://rust-lang.github.io/rustup/installation/other.html for manual installation doc
+- name: Install rustup
+  when: is_installed.rc != 0
+  block:
+    - name: Get architecture
+      ansible.builtin.set_fact:
+        system_arch: "{{ 'armv7' if ansible_architecture == 'armv7l' else ansible_architecture }}"
+        clib: "{{ 'gnueabihf' if ansible_architecture == 'armv7l' else 'gnu' }}"
+
+    # This step should not be needed after https://github.com/rust-lang/rustup/issues/3693 is fixed
+    - name: Register checksum workaround
+      ansible.builtin.uri:
+        url: "https://static.rust-lang.org/rustup/dist/{{ system_arch }}-unknown-linux-{{ clib }}/rustup-init.sha256"
+        return_content: true
+      register: checksum
+
+    # Check https://rust-lang.github.io/rustup/installation/other.html for manual installation doc
+    - name: Download rustup-init
+      ansible.builtin.get_url:
+        url: "https://static.rust-lang.org/rustup/dist/{{ system_arch }}-unknown-linux-{{ clib }}/rustup-init"
+        dest: /tmp/rustup-init
+        # checksum: "sha256:https://static.rust-lang.org/rustup/dist/{{ system_arch }}-unknown-linux-{{ clib }}/rustup-init.sha256"
+        checksum: "sha256:{{ checksum.content | regex_search('^[a-zA-Z0-9]+') }}"
+        mode: "0555"
+
+    - name: Run rustup-init
+      ansible.builtin.command: /tmp/rustup-init -y
+      args:
+        creates: "$HOME/.cargo"
+      changed_when: false
+
+  always:
+    - name: Clean
+      ansible.builtin.file:
+        path: /tmp/rustup-init
+        state: absent
+
+- name: Update rust toolchain
+  ansible.builtin.command: rustup update
+  when: is_installed.rc == 0
+  changed_when: false
