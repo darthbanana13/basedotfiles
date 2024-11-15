@@ -1,0 +1,181 @@
+# There is no longer a reference config for Alacritty. In case of breaking changes, check out examples made by the community like: https://gist.github.com/ritog/76081f97681e7079d11ec163a5bd4141
+[[keyboard.bindings]]
+action = "Paste"
+key = "Paste"
+
+[[keyboard.bindings]]
+action = "Copy"
+key = "Copy"
+
+[[keyboard.bindings]]
+action = "ClearLogNotice"
+key = "L"
+mods = "Control"
+
+[[keyboard.bindings]]
+chars = "\f"
+key = "L"
+mode = "~Vi|~Search"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "ScrollPageUp"
+key = "PageUp"
+mode = "~Alt"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ScrollPageDown"
+key = "PageDown"
+mode = "~Alt"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ScrollToTop"
+key = "Home"
+mode = "~Alt"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ScrollToBottom"
+key = "End"
+mode = "~Alt"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "Paste"
+key = "V"
+mode = "~Vi"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+action = "Copy"
+key = "C"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+action = "SearchForward"
+key = "F"
+mode = "~Search"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+action = "SearchBackward"
+key = "B"
+mode = "~Search"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+action = "ClearSelection"
+key = "C"
+mode = "Vi|~Search"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+action = "PasteSelection"
+key = "Insert"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ResetFontSize"
+key = "Key0"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "IncreaseFontSize"
+key = "Equals"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "IncreaseFontSize"
+key = "Plus"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "IncreaseFontSize"
+key = "NumpadAdd"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "DecreaseFontSize"
+key = "Minus"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "DecreaseFontSize"
+key = "NumpadSubtract"
+mods = "Control"
+
+[terminal]
+
+[colors.bright]
+black = "0x7f8c8d"
+blue = "0x3daee9"
+cyan = "0x16a085"
+green = "0x1cdc9a"
+magenta = "0x8e44ad"
+red = "0xc0392b"
+white = "0xfcfcfc"
+yellow = "0xfdbc4b"
+
+[colors.dim]
+black = "0x31363b"
+blue = "0x1b668f"
+cyan = "0x186c60"
+green = "0x17a262"
+magenta = "0x614a73"
+red = "0x783228"
+white = "0x63686d"
+yellow = "0xb65619"
+
+[colors.normal]
+black = "0x31363b"
+blue = "0x1d99f3"
+cyan = "0x1abc9c"
+green = "0x11d116"
+magenta = "0x9b59b6"
+red = "0xed1515"
+white = "0xeff0f1"
+yellow = "0xf67400"
+
+[colors.primary]
+background = "0x31363b"
+foreground = "0xeff0f1"
+
+[env]
+COLORTERM = "truecolor"
+
+[font]
+size = 13.0
+
+[font.bold]
+family = "Hack Nerd Font"
+style = "Bold"
+
+[font.bold_italic]
+family = "Hack Nerd Font"
+style = "Bold Italic"
+
+[font.italic]
+family = "Hack Nerd Font"
+style = "Italic"
+
+[font.normal]
+family = "Hack Nerd Font"
+
+[scrolling]
+history = 100000
+
+[selection]
+save_to_clipboard = true
+
+[terminal.shell]
+args = ["zsh", "-l", "-c", "tmux attach 2> /dev/null || tmux"]
+program = "/usr/bin/env"
+
+[window]
+decorations_theme_variant = "Dark"
+dynamic_title = true
+opacity = 0.85
+
+[keyboard]
