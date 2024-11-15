@@ -1,153 +1,139 @@
 ---
-- name: "Check if {{ app.name }} is installed"
-  ansible.builtin.command: which {{ app.name }}
-  changed_when: false
-  ignore_errors: true
-  register: is_installed
+- name: Check version
+  ansible.builtin.include_tasks: test.yml
 
-# Sub shells don't work with command
-- name: "Check installed version of {{ app.name }}" # noqa command-instead-of-shell
-  ansible.builtin.shell: "{{ app.version_shell_cmd }}"
-  changed_when: false
-  when: is_installed.rc == 0
-  register: version
+# - name: Check version
+#   ansible.builtin.include_tasks: deb.yml
 
-- name: "Print calculated version of {{ app.name }}"
-  ansible.builtin.debug:
-    msg: "{{ version.stdout_lines[0] }}"
-    # verbosity: 1
-
-- name: "If latest check for updates"
-  ansible.builtin.uri:
-    url: "https://api.github.com/repos/{{ app.repo_name }}/releases/latest"
-    return_content: true
-  when: app.version == 'latest'
-  register: latest_info
-
-- name: "Set {{ app.name }} version string"
-  ansible.builtin.set_fact:
-    ver: "{{ latest_info.json.tag_name if app.version == 'latest' else app.version }}"
-
-- name: "Install {{ app.name }}"
-  when: version.stdout_lines[0] != ver
-  block:
-    - name: "Get fd release info"
-      ansible.builtin.uri:
-        url: "https://api.github.com/repos/{{ app.repo_name }}/releases/tags/{{ ver }}"
-        return_content: true
-      register: tag_info
-
-    - name: "Parse {{ app.name }} download link"
-      ansible.builtin.set_fact:
-        download_url: >-
-          {{
-            tag_info.json.assets |
-            community.general.json_query(app.artifacts_json_query) |
-            first
-          }}
-
-    - name: "Print {{ app.name }} download link"
-      ansible.builtin.debug:
-        msg: "{{ download_url }}"
-        # verbosity: 1
-
-    - name: "Download {{ app.name }}"
-      ansible.builtin.get_url:
-        url: "{{ download_url }}"
-        dest: /tmp
-        mode: '0555'
-      register: download_info
-        # checksum: "sha256:{{ download_url }}.sha256sum"
-
-    - name: Get release file extension
-      ansible.builtin.set_fact:
-        ext: "{{ (download_info.dest | basename | splitext)[1] }}"
-
-    - name: Install deb
-      ansible.builtin.apt:
-        deb: /tmp/mypackage.deb
-      when: ext == '.deb'
-
-    - name: Install appimage
-      ansible.builtin.copy:
-        src: "{{ download_info.dest }}"
-        dest: "{{ app.install_location | default('/usr/local/bin') }}"
-        mode: '0555'
-        remote_src: true
-      when: ext == '.appimage'
-
-    - name: "Install {{ app.name }}"
-      when: (ext == '.gz') or
-            (ext == '.zip') or
-            (ext == '.xz')
-      block:
-        - name: Extract archive
-          ansible.builtin.unarchive:
-            src: "{{ download_info.dest }}"
-            dest: /tmp
-            list_files: true
-            remote_src: true
-          register: extract
-
-        - name: Print extracted files
-          ansible.builtin.debug:
-            msg: "{{ extract.files }}"
-
-        - name: Print executable from archive to be installed
-          ansible.builtin.debug:
-            msg: "{{ extract.files | select('search', '/' + app.name + '$') }}"
-            # verbosity: 1
-
-        # Find the file in the extracted files that matches the name of the app exactly and install it
-        - name: "Install {{ app.name }}"
-          ansible.builtin.copy:
-            src: "{{ extract.dest }}/{{ extract.files | select('search', '/' + app.name + '$') | first }}"
-            dest: "{{ app.install_location | default('/usr/local/bin') }}"
-            mode: '0555'
-            remote_src: true
-          become: true
-
-        - name: Install manual
-          ansible.builtin.copy:
-            src: "{{ extract.dest }}/{{ extract.files | select('search', '\\.1$') | first }}"
-            dest: "{{ app.manual_location | default('/usr/local/share/man/man1') }}"
-            mode: '0644'
-            remote_src: true
-          become: true
-
-    - name: Source compile
-      when: app.install_method == 'source'
-      block:
-        - name: Install build prerequisites
-          ansible.builtin.apt:
-            pkg: {{ app.prerequisite_packages }}
-
-        - name: "Clone {{ app.name }} repo"
-          ansible.builtin.git:
-            repo: "https://github.com/{{ app.repo_name }}.git"
-            dest: "/tmp/{{ app.name }}"
-            single_branch: true
-            depth: 1
-            version: "{{ ver }}"
-
-          # TODO: Handle the case when it's a Rust project
-          # TODO: /tmp is not DRY and should be configurable
-        - name: Make steps
-          community.general.make:
-            chdir: "/tmp/{{ app.name }}"
-            params:
-              CMAKE_BUILD_TYPE: Release
-          loop: "{{ app.make_steps }}"
-          become: true # TODO: This should only be needed for the install step
-
-  always:
-    - name: Clean download
-      ansible.builtin.file:
-        path: "{{ download_info.dest }}"
-        state: absent
-
-    - name: Clean unarchived files
-      ansible.builtin.file:
-        path: "{{ extract.dest }}/{{ extract.files[0] | dirname }}"
-        state: absent
-      when: extract is defined
+# - name: "Check if {{ app.name }} is installed"
+#   ansible.builtin.command: which {{ app.name }}
+#   changed_when: false
+#   ignore_errors: true
+#   register: is_installed
+#
+# - name: Check version
+#   ansible.builtin.include_tasks: compare_version.yml
+#
+# - name: "Install {{ app.name }}"
+#   when: version.stdout_lines[0] != ver
+#   block:
+#     - name: "Get {{ app.name }} release info"
+#       ansible.builtin.uri:
+#         url: "https://api.github.com/repos/{{ app.repo_name }}/releases/tags/{{ ver }}"
+#         return_content: true
+#       register: tag_info
+#
+#     - name: "Parse {{ app.name }} download link"
+#       ansible.builtin.set_fact:
+#         download_url: >-
+#           {{
+#             tag_info.json.assets |
+#             community.general.json_query(app.artifacts_json_query) |
+#             first
+#           }}
+#
+#     - name: "Print {{ app.name }} download link"
+#       ansible.builtin.debug:
+#         msg: "{{ download_url }}"
+#         # verbosity: 1
+#
+#     - name: "Download {{ app.name }}"
+#       ansible.builtin.get_url:
+#         url: "{{ download_url }}"
+#         dest: /tmp
+#         mode: '0555'
+#       register: download_info
+#         # checksum: "sha256:{{ download_url }}.sha256sum"
+#
+#     - name: Get release file extension
+#       ansible.builtin.set_fact:
+#         ext: "{{ (download_info.dest | basename | splitext)[1] }}"
+#
+#     - name: Install deb
+#       ansible.builtin.apt:
+#         deb: /tmp/mypackage.deb
+#       when: ext == '.deb'
+#
+#     - name: Install appimage
+#       ansible.builtin.copy:
+#         src: "{{ download_info.dest }}"
+#         dest: "{{ app.install_location | default('/usr/local/bin') }}"
+#         mode: '0555'
+#         remote_src: true
+#       when: ext == '.appimage'
+#
+#     - name: "Install {{ app.name }}"
+#       when: (ext == '.gz') or
+#             (ext == '.zip') or
+#             (ext == '.xz')
+#       block:
+#         - name: Extract archive
+#           ansible.builtin.unarchive:
+#             src: "{{ download_info.dest }}"
+#             dest: /tmp
+#             list_files: true
+#             remote_src: true
+#           register: extract
+#
+#         - name: Print extracted files
+#           ansible.builtin.debug:
+#             msg: "{{ extract.files }}"
+#
+#         - name: Print executable from archive to be installed
+#           ansible.builtin.debug:
+#             msg: "{{ extract.files | select('search', '/' + app.name + '$') }}"
+#             # verbosity: 1
+#
+#         # Find the file in the extracted files that matches the name of the app exactly and install it
+#         - name: "Install {{ app.name }}"
+#           ansible.builtin.copy:
+#             src: "{{ extract.dest }}/{{ extract.files | select('search', '/' + app.name + '$') | first }}"
+#             dest: "{{ app.install_location | default('/usr/local/bin') }}"
+#             mode: '0555'
+#             remote_src: true
+#           become: true
+#
+#         - name: Install manual
+#           ansible.builtin.copy:
+#             src: "{{ extract.dest }}/{{ extract.files | select('search', '\\.1$') | first }}"
+#             dest: "{{ app.manual_location | default('/usr/local/share/man/man1') }}"
+#             mode: '0644'
+#             remote_src: true
+#           become: true
+#
+#     - name: Source compile
+#       when: app.install_method == 'source'
+#       block:
+#         - name: Install build prerequisites
+#           ansible.builtin.apt:
+#             pkg: {{ app.prerequisite_packages }}
+#
+#         - name: "Clone {{ app.name }} repo"
+#           ansible.builtin.git:
+#             repo: "https://github.com/{{ app.repo_name }}.git"
+#             dest: "/tmp/{{ app.name }}"
+#             single_branch: true
+#             depth: 1
+#             version: "{{ ver }}"
+#
+#           # TODO: Handle the case when it's a Rust project
+#           # TODO: /tmp is not DRY and should be configurable
+#         - name: Make steps
+#           community.general.make:
+#             chdir: "/tmp/{{ app.name }}"
+#             params:
+#               CMAKE_BUILD_TYPE: Release
+#           loop: "{{ app.make_steps }}"
+#           become: true # TODO: This should only be needed for the install step
+#
+#   always:
+#     - name: Clean download
+#       ansible.builtin.file:
+#         path: "{{ download_info.dest }}"
+#         state: absent
+#
+#     - name: Clean unarchived files
+#       ansible.builtin.file:
+#         path: "{{ extract.dest }}/{{ extract.files[0] | dirname }}"
+#         state: absent
+#       when: extract is defined
