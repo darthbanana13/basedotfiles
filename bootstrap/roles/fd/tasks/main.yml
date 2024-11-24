@@ -1,0 +1,68 @@
+---
+- name: Check if fd is installed
+  ansible.builtin.command: which fd
+  ignore_errors: true
+  changed_when: false
+  register: is_installed
+
+- name: Check installed version of fd
+  ansible.builtin.command: fd --version
+  changed_when: false
+  when: is_installed.rc == 0
+  register: version
+
+- name: If latest check for updates
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/sharkdp/fd/releases/latest
+    return_content: true
+  when: fd.version == 'latest'
+  register: latest_info
+
+- name: Set version string
+  ansible.builtin.set_fact:
+    ver: "{{ latest_info.json.tag_name if fd.version == 'latest' else fd.version }}"
+
+- name: Install fd
+  when: version.stdout_lines[0] != 'fd ' + ver[1:]
+  block:
+    - name: Get release info
+      ansible.builtin.uri:
+        url: "https://api.github.com/repos/sharkdp/fd/releases/tags/{{ ver }}"
+        return_content: true
+      register: tag_info
+
+    - name: Get fd download link
+      ansible.builtin.set_fact:
+        download_url: >-
+          {{
+            tag_info.json.assets |
+            community.general.json_query('[?content_type==`application/vnd.appimage`].browser_download_url') |
+            join('')
+          }}
+
+    - name: Extract mise archive
+      ansible.builtin.unarchive:
+        src: /tmp/mise.tar.xz
+        dest: /tmp
+        remote_src: true
+
+    - name: Install mise
+      become: true
+      ansible.builtin.copy:
+        src: "/tmp/mise{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: "{{ item.mode }}"
+      with_items:
+        - { src: /bin/mise, dest: /usr/local/bin/mise, mode: '755' }
+        - { src: /man/man1/mise.1, dest: /usr/local/share/man/man1/mise.1, mode: '644' }
+
+  always:
+    - name: Clean
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - /tmp/mise.tar.xz
+        - /tmp/mise
