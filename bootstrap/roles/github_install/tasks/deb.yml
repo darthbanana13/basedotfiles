@@ -1,0 +1,143 @@
+---
+- name: Declare all assets
+  ansible.builtin.set_fact:
+    asset_list_filtered: []
+    extension_preference: ['deb', 'appimage', 'tar.xz', 'tar.gz', 'tbz', '']
+    artifact_lists:
+      - name: k9s
+        filenames: [k9s_Darwin_amd64.tar.gz, k9s_Darwin_amd64.tar.gz.sbom, k9s_Darwin_arm64.tar.gz, k9s_Darwin_arm64.tar.gz.sbom, k9s_Freebsd_amd64.tar.gz, k9s_Freebsd_amd64.tar.gz.sbom, k9s_Freebsd_arm64.tar.gz, k9s_Freebsd_arm64.tar.gz.sbom, k9s_Freebsd_armv7.tar.gz, k9s_Freebsd_armv7.tar.gz.sbom, k9s_linux_amd64.apk, k9s_linux_amd64.deb, k9s_linux_amd64.rpm, k9s_Linux_amd64.tar.gz, k9s_Linux_amd64.tar.gz.sbom, k9s_linux_arm.apk, k9s_linux_arm.deb, k9s_linux_arm.rpm, k9s_linux_arm64.apk, k9s_linux_arm64.deb, k9s_linux_arm64.rpm, k9s_Linux_arm64.tar.gz, k9s_Linux_arm64.tar.gz.sbom, k9s_Linux_armv7.tar.gz, k9s_Linux_armv7.tar.gz.sbom, k9s_linux_ppc64le.apk, k9s_linux_ppc64le.deb, k9s_linux_ppc64le.rpm, k9s_Linux_ppc64le.tar.gz, k9s_Linux_ppc64le.tar.gz.sbom, k9s_linux_s390x.apk, k9s_linux_s390x.deb, k9s_linux_s390x.rpm, k9s_Linux_s390x.tar.gz, k9s_Linux_s390x.tar.gz.sbom, k9s_Windows_amd64.zip, k9s_Windows_amd64.zip.sbom, k9s_Windows_arm64.zip, k9s_Windows_arm64.zip.sbom]
+      - name: direnv
+        filenames: [direnv.darwin-amd64, direnv.darwin-arm64, direnv.freebsd-386, direnv.freebsd-amd64, direnv.freebsd-arm, direnv.linux-386, direnv.linux-amd64, direnv.linux-arm, direnv.linux-arm64, direnv.linux-mips, direnv.linux-mips64, direnv.linux-mips64le, direnv.linux-mipsle, direnv.linux-ppc64, direnv.linux-ppc64le, direnv.linux-s390x, direnv.netbsd-386, direnv.netbsd-amd64, direnv.netbsd-arm, direnv.openbsd-386, direnv.openbsd-amd64, direnv.windows-386.exe, direnv.windows-amd64.exe]
+      - name: btop
+        filenames: [btop-aarch64-linux-musl.tbz, btop-arm-linux-musleabi.tbz, btop-armv5l-linux-musleabi.tbz, btop-armv7l-linux-musleabihf.tbz, btop-i486-linux-musl.tbz, btop-i686-linux-musl.tbz, btop-mips64-linux-musl.tbz, btop-powerpc64-linux-musl.tbz, btop-x86_64-linux-musl.tbz]
+      - name: lsd
+        filenames: [lsd-musl_1.0.0_amd64.deb, lsd-musl_1.0.0_arm64.deb, lsd-musl_1.0.0_i686.deb, lsd-v1.0.0-aarch64-apple-darwin.tar.gz, lsd-v1.0.0-aarch64-unknown-linux-gnu.tar.gz, lsd-v1.0.0-aarch64-unknown-linux-musl.tar.gz, lsd-v1.0.0-arm-unknown-linux-gnueabihf.tar.gz, lsd-v1.0.0-i686-pc-windows-gnu.zip, lsd-v1.0.0-i686-pc-windows-msvc.zip, lsd-v1.0.0-i686-unknown-linux-gnu.tar.gz, lsd-v1.0.0-i686-unknown-linux-musl.tar.gz, lsd-v1.0.0-x86_64-apple-darwin.tar.gz, lsd-v1.0.0-x86_64-pc-windows-gnu.zip, lsd-v1.0.0-x86_64-pc-windows-msvc.zip, lsd-v1.0.0-x86_64-unknown-linux-gnu.tar.gz, lsd-v1.0.0-x86_64-unknown-linux-musl.tar.gz, lsd_1.0.0_amd64.deb, lsd_1.0.0_arm64.deb, lsd_1.0.0_i686.deb]
+      - name: bat
+        filenames: [bat-musl_0.24.0_amd64.deb, bat-musl_0.24.0_i686.deb, bat-v0.24.0-aarch64-unknown-linux-gnu.tar.gz, bat-v0.24.0-arm-unknown-linux-gnueabihf.tar.gz, bat-v0.24.0-arm-unknown-linux-musleabihf.tar.gz, bat-v0.24.0-i686-pc-windows-msvc.zip, bat-v0.24.0-i686-unknown-linux-gnu.tar.gz, bat-v0.24.0-i686-unknown-linux-musl.tar.gz, bat-v0.24.0-x86_64-apple-darwin.tar.gz, bat-v0.24.0-x86_64-pc-windows-gnu.zip, bat-v0.24.0-x86_64-pc-windows-msvc.zip, bat-v0.24.0-x86_64-unknown-linux-gnu.tar.gz, bat-v0.24.0-x86_64-unknown-linux-musl.tar.gz, bat_0.24.0_amd64.deb, bat_0.24.0_arm64.deb, bat_0.24.0_armhf.deb, bat_0.24.0_i686.deb]
+      - name: ripgrep
+        filenames: [ripgrep-14.1.0-aarch64-apple-darwin.tar.gz, ripgrep-14.1.0-aarch64-apple-darwin.tar.gz.sha256, ripgrep-14.1.0-aarch64-unknown-linux-gnu.tar.gz, ripgrep-14.1.0-aarch64-unknown-linux-gnu.tar.gz.sha256, ripgrep-14.1.0-armv7-unknown-linux-gnueabihf.tar.gz, ripgrep-14.1.0-armv7-unknown-linux-gnueabihf.tar.gz.sha256, ripgrep-14.1.0-armv7-unknown-linux-musleabi.tar.gz, ripgrep-14.1.0-armv7-unknown-linux-musleabi.tar.gz.sha256, ripgrep-14.1.0-armv7-unknown-linux-musleabihf.tar.gz, ripgrep-14.1.0-armv7-unknown-linux-musleabihf.tar.gz.sha256, ripgrep-14.1.0-i686-pc-windows-msvc.zip, ripgrep-14.1.0-i686-pc-windows-msvc.zip.sha256, ripgrep-14.1.0-i686-unknown-linux-gnu.tar.gz, ripgrep-14.1.0-i686-unknown-linux-gnu.tar.gz.sha256, ripgrep-14.1.0-powerpc64-unknown-linux-gnu.tar.gz, ripgrep-14.1.0-powerpc64-unknown-linux-gnu.tar.gz.sha256, ripgrep-14.1.0-s390x-unknown-linux-gnu.tar.gz, ripgrep-14.1.0-s390x-unknown-linux-gnu.tar.gz.sha256, ripgrep-14.1.0-x86_64-apple-darwin.tar.gz, ripgrep-14.1.0-x86_64-apple-darwin.tar.gz.sha256, ripgrep-14.1.0-x86_64-pc-windows-gnu.zip, ripgrep-14.1.0-x86_64-pc-windows-gnu.zip.sha256, ripgrep-14.1.0-x86_64-pc-windows-msvc.zip, ripgrep-14.1.0-x86_64-pc-windows-msvc.zip.sha256, ripgrep-14.1.0-x86_64-unknown-linux-musl.tar.gz, ripgrep-14.1.0-x86_64-unknown-linux-musl.tar.gz.sha256, ripgrep_14.1.0-1_amd64.deb, ripgrep_14.1.0-1_amd64.deb.sha256]
+      - name: mise
+        filenames: [mise-v2024.3.1-linux-arm64, mise-v2024.3.1-linux-arm64-musl, mise-v2024.3.1-linux-arm64-musl.tar.gz, mise-v2024.3.1-linux-arm64-musl.tar.xz, mise-v2024.3.1-linux-arm64.tar.gz, mise-v2024.3.1-linux-arm64.tar.xz, mise-v2024.3.1-linux-armv6, mise-v2024.3.1-linux-armv6-musl, mise-v2024.3.1-linux-armv6-musl.tar.gz, mise-v2024.3.1-linux-armv6-musl.tar.xz, mise-v2024.3.1-linux-armv6.tar.gz, mise-v2024.3.1-linux-armv6.tar.xz, mise-v2024.3.1-linux-armv7, mise-v2024.3.1-linux-armv7-musl, mise-v2024.3.1-linux-armv7-musl.tar.gz, mise-v2024.3.1-linux-armv7-musl.tar.xz, mise-v2024.3.1-linux-armv7.tar.gz, mise-v2024.3.1-linux-armv7.tar.xz, mise-v2024.3.1-linux-x64, mise-v2024.3.1-linux-x64-musl, mise-v2024.3.1-linux-x64-musl.tar.gz, mise-v2024.3.1-linux-x64-musl.tar.xz, mise-v2024.3.1-linux-x64.tar.gz, mise-v2024.3.1-linux-x64.tar.xz, mise-v2024.3.1-macos-arm64, mise-v2024.3.1-macos-arm64.tar.gz, mise-v2024.3.1-macos-arm64.tar.xz, mise-v2024.3.1-macos-x64, mise-v2024.3.1-macos-x64.tar.gz, mise-v2024.3.1-macos-x64.tar.xz, SHASUMS256.asc, SHASUMS256.txt, SHASUMS512.asc, SHASUMS512.txt]
+      - name: nvim
+        filenames: [nvim-linux64.tar.gz, nvim-linux64.tar.gz.sha256sum, nvim-macos.tar.gz, nvim-macos.tar.gz.sha256sum, nvim-win64.msi, nvim-win64.msi.sha256sum, nvim-win64.zip, nvim-win64.zip.sha256sum, nvim.appimage, nvim.appimage.sha256sum, nvim.appimage.zsync, nvim.appimage.zsync.sha256sum, checksums, checksums-bsd, checksums_hashes_order, extract-checksum.sh]
+      - name: yq
+        filenames: [yq_darwin_amd64, yq_darwin_amd64.tar.gz, yq_darwin_arm64, yq_darwin_arm64.tar.gz, yq_freebsd_386, yq_freebsd_386.tar.gz, yq_freebsd_amd64, yq_freebsd_amd64.tar.gz, yq_freebsd_arm, yq_freebsd_arm.tar.gz, yq_linux_386, yq_linux_386.tar.gz, yq_linux_amd64, yq_linux_amd64.tar.gz, yq_linux_arm, yq_linux_arm.tar.gz, yq_linux_arm64, yq_linux_arm64.tar.gz, yq_linux_mips, yq_linux_mips.tar.gz, yq_linux_mips64, yq_linux_mips64.tar.gz, yq_linux_mips64le, yq_linux_mips64le.tar.gz, yq_linux_mipsle, yq_linux_mipsle.tar.gz, yq_linux_ppc64, yq_linux_ppc64.tar.gz, yq_linux_ppc64le, yq_linux_ppc64le.tar.gz, yq_linux_s390x, yq_linux_s390x.tar.gz, yq_man_page_only.tar.gz, yq_netbsd_386, yq_netbsd_386.tar.gz, yq_netbsd_amd64, yq_netbsd_amd64.tar.gz, yq_netbsd_arm, yq_netbsd_arm.tar.gz, yq_openbsd_386, yq_openbsd_386.tar.gz, yq_openbsd_amd64, yq_openbsd_amd64.tar.gz, yq_windows_386.exe, yq_windows_386.zip, yq_windows_amd64.exe, yq_windows_amd64.zip]
+      - name: jq
+        filenames: [jq-1.7.1.tar.gz, jq-1.7.1.zip, jq-linux-amd64, jq-linux-arm64, jq-linux-armel, jq-linux-armhf, jq-linux-i386, jq-linux-mips, jq-linux-mips64, jq-linux-mips64el, jq-linux-mips64r6, jq-linux-mips64r6el, jq-linux-mipsel, jq-linux-mipsr6, jq-linux-mipsr6el, jq-linux-powerpc, jq-linux-ppc64el, jq-linux-riscv64, jq-linux-s390x, jq-linux64, jq-macos-amd64, jq-macos-arm64, jq-osx-amd64, jq-win64.exe, jq-windows-amd64.exe, jq-windows-i386.exe, sha256sum.txt]
+      - name: tmux
+        filenames: [tmux-3.4.tar.gz]
+
+- name: Filter the assets
+  ansible.builtin.set_fact:
+    asset_list_filtered: >
+      {{
+        asset_list_filtered + asset_list_zipped | selectattr(1, 'equalto', item)
+      }}
+  loop: "{{ sort_prompt }}"
+
+- name: Display the results
+  ansible.builtin.debug:
+    var: asset_list_filtered
+  vars:
+    asset_list_filtered: "{{ asset_list_filtered | map(attribute='0') }}"
+
+# - name: Filter each sublist of artifacts based on target architecture, OS, and preferences
+#   ansible.builtin.set_fact:
+#     # arch_filter: "{{ filtered_by_arch }}"
+#     list_extensions: "{{ asset_list_extensions }}"
+#     list_zipped: "{{ asset_list_extensions }}"
+#     list_order: "{{ filename_list_order }}"
+#     list_filter: "{{ filename_list_filtered }}"
+#   vars:
+#     arch_mapping:
+#       x86_64: ['x64', 'amd64', 'x86_64']
+#       aarch64: ['aarch64', 'arm64']
+#     # filtered_by_arch: "{{ item.filenames | select('regex', arch_regex) | default(item.filenames, true) }}"
+#     # arch_regex: ".+({{ arch_mapping[ansible_architecture] | join('|') }}).*"
+#     default_arch: "amd64"
+#     os_keyword: "linux"
+#     extension_preference: ['deb', 'appimage', 'tar.xz', 'tar.gz', 'tbz', '']
+#     asset_list_extensions: "{{ item.filenames | map('split', '.', 1) | map(attribute='1', default='') }}"
+#     asset_list_zipped: "{{ item.filenames | zip(asset_list_extensions) }}"
+#     filename_lists_order: |
+#       [{% for ext in extension_preference %}
+#       {{ asset_list_zipped | selectattr(1, 'equalto', ext) }},
+#       {% endfor %}]
+#     filename_list_order: "{{ filename_lists_order | flatten }}"
+#     filename_list_filtered: "{{ filename_list_order | map(attribute='0') }}"
+#     # reverse_preference: "{{ extension_preference | map('reverse') }}"
+#     # reverse_filenames: "{{ item.filenames | map('reverse') }}"
+#     # filename_list_order: |
+#     #   [{% for ext in reverse_preference %}
+#     #   {{ reverse_filenames | select('match', ext) | map('reverse') }},
+#     #   {% endfor %}]
+#     # filename_order: "{{ filename_list_order | flatten }}"
+#     # filename_exec: "{{ item.filenames | reject('search', '\\.') }}"
+#     # filename_ordered: "{{ filename_order + filename_exec }}"
+#     # filtered_and_sorted_filenames: "{{ item.filenames | select('match', '\\.' + ext_regex + '$') | list | map('regex_replace', '^(.*\\.)' + ext_regex + '$', '\\2 \\1\\2') | sort | map('regex_replace', '^' + ext_regex + ' ', '') }}"
+#     # filtered_by_os: "{{ filtered_by_arch | select('regex', 'linux|^(?!.*\\.(darwin|win|freebsd)).*$') | list }}"
+#     # final_artifact: "{{ extension_preference | map('regex_search', filtered_by_os | join(' ')) | select('first') | first | default(filtered_by_os | first) }}"
+#     # filename_order: |
+#     #   {% filter flatten %}
+#     #   [{% for ext in reverse_preference %}
+#     #   {{ reverse_filenames | select('match', ext) | map('reverse') }},
+#     #   {% endfor %}]
+#     #   {% endfilter %}
+#   loop: "{{ artifact_lists }}"
+#   loop_control:
+#     label: "{{ item.name }}"
+#   register: result
+#
+#
+# - name: Display filtered artifacts
+#   ansible.builtin.debug:
+#     msg: "{{ result }}"
+
+# - name: Get all assets
+#   ansible.builtin.set_fact:
+#     asset_filenames: >-
+#       {{
+#         tag_info.json.assets.*.name
+#       }}
+#
+# - name: Filter by architecture
+#   ansible.builtin.set_fact:
+#     filtered_filenames: >-
+#       {{
+#         arch_filtered
+#       }}
+#   vars:
+#     arch_maps:
+#       x86_64: ['x64', 'amd64', 'x86_64']
+#       aarch64: ['aarch64', 'arm64']
+#     arch_match: "{{ arch_maps[ansible_architecture] | join('|') }}"
+#     arch_filtered: "{{ item.filenames | select('match', arch_match) }}"
+#   loop: "{{ artifact_lists }}"
+#   loop_control:
+#     label: "{{ item.name }}"
+#
+# - name: Display filtered artifacts
+#   ansible.builtin.debug:
+#     msg: "Filtered files: {{ filtered_filenames }}"
+
+# - name: Check remaining results
+#   ansible.builtin.set_fact:
+#     remaining_filenames: >-
+#       {{
+#         filtered_filenames if filtered_filenames | lenght >= 1
+#       }}
+#
+# - name: Filter by os
+#   ansible.builtin.set_fact:
+#     filtered_names: >-
+#       {{
+#         filtered_names | select('search' , '.+(length).*')
+#       }}
+#
+# - name: Search for deb install
+#   ansible.builtin.set_fact:
+#     download_url: >-
+#       {{
+#         tag_info.json.assets |
+#         community.general.json_query('[?ends_with(name, `.deb`]')
+#       }}

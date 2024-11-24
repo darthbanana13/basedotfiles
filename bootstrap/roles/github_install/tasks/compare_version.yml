@@ -1,0 +1,23 @@
+---
+# Sub shells don't work with command
+- name: "Check installed version of {{ app.name }}" # noqa command-instead-of-shell
+  ansible.builtin.shell: "{{ app.version_shell_cmd }}"
+  changed_when: false
+  when: is_installed.rc == 0
+  register: version
+
+- name: "Print calculated version of {{ app.name }}"
+  ansible.builtin.debug:
+    msg: "{{ version.stdout_lines[0] }}"
+    verbosity: 1
+
+- name: "If latest check what version that is"
+  ansible.builtin.uri:
+    url: "https://api.github.com/repos/{{ app.repo_name }}/releases/latest"
+    return_content: true
+  when: app.version == 'latest'
+  register: latest_info
+
+- name: "Set {{ app.name }} version string"
+  ansible.builtin.set_fact:
+    ver: "{{ latest_info.json.tag_name if app.version == 'latest' else app.version }}"
