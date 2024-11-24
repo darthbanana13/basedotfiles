@@ -127,6 +127,7 @@ export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 
 # TODO: Better unify the settings for bash & zsh
 ##################################Load custom files######################################
-for file in vars aliases func; do
-  [[ ! -f "${HOME}/.shell/${file}.sh" ]] || source "${HOME}/.shell/${file}.sh"
-done
+#for file in vars aliases func; do
+#  [[ ! -f "${HOME}/.shell/${file}.sh" ]] || source "${HOME}/.shell/${file}.sh"
+#done
+. "$HOME/.cargo/env"
