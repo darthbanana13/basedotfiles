@@ -123,6 +123,10 @@
         - nvim
         - neovim
 
+      # TODO: Introduce a task that verifies if wayland is installed. If it is then install `wl-clipboard`
+      # otherwise vim can not see the system clipboard.
+      # Use this answer for wayland detection: https://unix.stackexchange.com/a/325972
+
       # TODO: I haven't found a good way for change_when to reflect when plugins are actually installed
     - name: Install plugins
       ansible.builtin.command: "nvim '+silent! {{ neovim.plugin_install }}' +qal!"
