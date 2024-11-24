@@ -33,8 +33,9 @@ alias bash="PERMIT_BASH=true bash"
 # Don't see any reason why we should not use a better top utility if it exists
 cmdExists btop && alias top='btop'
 
-# Use cat on steroids if it exists
-cmdExists bat && alias cat='bat'
+# Use cat on steroids if it exists, and don't page, like cat does
+# If you don't like the paging behaviour use bat directly
+cmdExists bat && alias cat='bat --paging=never'
 
 #Edit .zshrc
 alias ez="${EDITOR} ${HOME}/.zshrc"
