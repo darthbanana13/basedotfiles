@@ -13,11 +13,6 @@ fi
 #Make the dirs command useful
 alias dirs="dirs -v"
 
-#Shortcut for Jenkins CLI
-if cmdExists java && [[ -f "${HOME}/Apps/jenkins-cli.jar" ]]; then
-  alias jenkins-cli="JENKINS_USER_ID=${JENKINS_USER_ID} JENKINS_API_TOKEN=${JENKINS_API_TOKEN} java -jar ${HOME}/Apps/jenkins-cli.jar -webSocket -s ${JENKINS_URL}"
-fi
-
 # Color ls
 cmdExists lsd && alias ls='lsd'
 
