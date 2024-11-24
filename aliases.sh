@@ -1,3 +1,4 @@
+# TODO: This needs some work, in case wayland is used
 if cmdExists xclip; then
   #Copy to clipboard
   alias xc="xclip -selection c"
