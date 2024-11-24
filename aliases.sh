@@ -22,11 +22,13 @@ alias ssh='ssh -o AddKeysToAgent=yes'
 # Don' make using bash interactively impossible
 alias bash="PERMIT_BASH=true bash"
 
-#Make sure we make an alias from vi & vim to nvim here, because a symlink might not be installed automatically for nvim
-if cmdExists nvim; then
-  alias vi=nvim
-  alias vim=nvim
-fi
+# Make sure we make an alias from vi & vim to nvim here, because a symlink might not be installed automatically for nvim
+# Update: Usually use update-alternatives for debian based systems. There is an example in the bootstraps folder.
+# Otherwise this will overrider the update-alternatives
+# if cmdExists nvim; then
+#   alias vi=nvim
+#   alias vim=nvim
+# fi
 
 # Don't see any reason why we should not use a better top utility if it exists
 cmdExists btop && alias top='btop'
