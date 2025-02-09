@@ -102,6 +102,8 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1
 # bindkey '^X' incremental-complete-word
 
 # TODO: Replace zplug with a better solution
+# https://www.reddit.com/r/zsh/comments/ak0vgi/a_comparison_of_all_the_zsh_plugin_mangers_i_used/
+# https://www.reddit.com/r/zsh/comments/1etl9mz/fastest_plugin_manager/
 # Check if zplug is installed
 if [[ ! -d ~/.zplug ]] && cmdExists gawk; then
   git clone https://github.com/zplug/zplug ~/.zplug
