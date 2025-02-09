@@ -89,23 +89,6 @@ proxyProbe() {
   fi
 }
 
-awsProxy() {
-  local proxyArgs=("${AWS_PROXY_PROTOCOL}" "${AWS_PROXY_HOST}" "${AWS_PROXY_PORT}")
-  local proxyAddr="$(composeProxyAddr ${proxyArgs[@]})"
-
-  if [[ "${http_proxy}" != "${proxyAddr}" ]]; then
-    proxySet ${proxyArgs[@]}
-  else
-    proxyUnset
-  fi
-}
-
-changeCluster() {
-  local clusterName="${1:-$AWS_CLUSTER_NAME}"
-  export AWS_CLUSTER_NAME="${clusterName}"
-  aws eks update-kubeconfig --name "${AWS_CLUSTER_NAME}" --region "${AWS_REGION}"
-}
-
 wslSetDisplay() {
   local ipconfig="/mnt/c/Windows/System32/ipconfig.exe"
   local grepip=("grep" "-oP" '(?<=IPv4 Address(?:\.\s){11}:\s)((?:\d+\.){3}\d+)')

@@ -82,7 +82,7 @@ if cmdExists java; then
 fi
 
 if [[ -d "${HOME}/.poetry/bin" ]]; then
-  export PATH="${HOME}/.poetry/bin:$PATH"
+  export PATH="${HOME}/.poetry/bin:${PATH}"
 fi
 
 # Make VIM the default editor
@@ -101,6 +101,7 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1
 # zle -N incremental-complete-word
 # bindkey '^X' incremental-complete-word
 
+# TODO: Replace zplug with a better solution
 # Check if zplug is installed
 if [[ ! -d ~/.zplug ]] && cmdExists gawk; then
   git clone https://github.com/zplug/zplug ~/.zplug
@@ -151,7 +152,8 @@ local omzPlugins=(
   colored-man-pages
   colorize
   command-not-found
-  direnv
+  # This is causing some headache, don't install it for now
+  # direnv
   fancy-ctrl-z
   fd
   git-auto-fetch
@@ -222,7 +224,7 @@ if [[ -f ~/.fzf.zsh ]]; then
   fi
 fi
 
-#Enable Asynchronous Mode for suggestions
+# Enable Asynchronous Mode for suggestions
 export ZSH_AUSOSUGGEST_USE_ASYNC=true
 
 # Override oh-my-zsh history size
@@ -241,7 +243,7 @@ for file in vars aliases func; do
 done
 
 ##################################Custom function Configs######################################
-#Set up proxy if in VPN or not
+# Set up proxy if in VPN or not
 [[ "${ALWAYS_PROXY_PROBE}" == "true" ]] && proxyProbe
 
 # Load Angular CLI autocompletion.
@@ -250,8 +252,7 @@ done
 ##################################Misc######################################
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-PATH="/home/revan/perl5/bin${PATH:+:${PATH}}"; export PATH;
+export PATH="${PATH}:/home/revan/perl5/bin"
 PERL5LIB="/home/revan/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
 PERL_LOCAL_LIB_ROOT="/home/revan/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
 PERL_MB_OPT="--install_base \"/home/revan/perl5\""; export PERL_MB_OPT;

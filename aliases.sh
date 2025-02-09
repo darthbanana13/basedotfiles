@@ -10,11 +10,14 @@ elif cmdExists termux-clipboard-get; then
   alias xp="termux-clipboard-set"
 fi
 
-#Make the dirs command useful
+# Make the dirs command useful
 alias dirs="dirs -v"
 
 # Color ls
 cmdExists lsd && alias ls='lsd'
+
+# Use Mosh instead of SSH
+cmdExists mosh && alias ssh='mosh'
 
 # For enabling lazy loading of ssh keys
 alias ssh='ssh -o AddKeysToAgent=yes'
