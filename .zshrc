@@ -31,9 +31,11 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # Node Version manager for managing node versions
-export NVM_DIR="$HOME/.nvm"
-[[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-[[ -s "$NVM_DIR/bash_completion" ]] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+if cmdExists nvm; then
+  export NVM_DIR="$HOME/.nvm"
+  [[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+  [[ -s "$NVM_DIR/bash_completion" ]] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+fi
 
 #if you do a 'rm *', Zsh will give you a sanity check!
 setopt RM_STAR_WAIT
@@ -105,8 +107,12 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1
 # https://www.reddit.com/r/zsh/comments/ak0vgi/a_comparison_of_all_the_zsh_plugin_mangers_i_used/
 # https://www.reddit.com/r/zsh/comments/1etl9mz/fastest_plugin_manager/
 # Check if zplug is installed
-if [[ ! -d ~/.zplug ]] && cmdExists gawk; then
-  git clone https://github.com/zplug/zplug ~/.zplug
+if cmdExists gawk; then
+  if [[ ! -d ~/.zplug ]]; then
+    git clone https://github.com/zplug/zplug ~/.zplug
+  fi
+else
+  echo "Please install gawk";
 fi
 
 source ~/.zplug/init.zsh
