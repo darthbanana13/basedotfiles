@@ -31,8 +31,8 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # Node Version manager for managing node versions
-if [[ -d "${HOME}/.nvm" ]]; then
-  export NVM_DIR="$HOME/.nvm"
+if [[ -d "${HOME}/.config/nvm" ]]; then
+  export NVM_DIR="$HOME/.config/nvm"
   [[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"  # This loads nvm
   [[ -s "$NVM_DIR/bash_completion" ]] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 fi
