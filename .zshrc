@@ -30,12 +30,12 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Node Version manager for managing node versions
-if [[ -d "${HOME}/.config/nvm" ]]; then
-  export NVM_DIR="$HOME/.config/nvm"
-  [[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-  [[ -s "$NVM_DIR/bash_completion" ]] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-fi
+# # Node Version manager for managing node versions
+# if [[ -d "${HOME}/.config/nvm" ]]; then
+#   export NVM_DIR="$HOME/.config/nvm"
+#   [[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+#   [[ -s "$NVM_DIR/bash_completion" ]] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# fi
 
 #if you do a 'rm *', Zsh will give you a sanity check!
 setopt RM_STAR_WAIT
@@ -49,18 +49,9 @@ setopt monitor
 # Set our username so the prompt hides it
 export DEFAULT_USER="$(whoami)"
 
-# Set ssh-agent params
-zstyle :omz:plugins:ssh-agent agent-forwarding yes
-zstyle :omz:plugins:ssh-agent lifetime 1h
-zstyle :omz:plugins:ssh-agent quiet yes # for Powerlevel10k instant prompt
-zstyle :omz:plugins:ssh-agent lazy yes # prompt & load after first use of the key
-
 # Add local bin directories to PATH
 export PATH="${PATH}:${HOME}/.local/bin"
 
-if [[ -d "${HOME}/.composer/vendor/bin" ]]; then
-  export PATH="${PATH}:${HOME}/.composer/vendor/bin"
-fi
 if cmdExists go; then
   export GOPATH="${HOME}/.local/go"
   export GOBIN="${GOPATH}/bin"
@@ -97,11 +88,20 @@ export COMPOSE_DOCKER_CLI_BUILD=1
 # Always opt out of the .NET telemetry
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
-# This messes up highlight
-# zstyle :incremental list yes
-# autoload -U incremental-complete-word
-# zle -N incremental-complete-word
-# bindkey '^X' incremental-complete-word
+# fzf config
+export FZF_TMUX_OPTS="-p 95%,60%"
+
+# Set ssh-agent params
+zstyle :omz:plugins:ssh-agent agent-forwarding yes
+zstyle :omz:plugins:ssh-agent lifetime 1h
+zstyle :omz:plugins:ssh-agent quiet yes # for Powerlevel10k instant prompt
+zstyle :omz:plugins:ssh-agent lazy yes # prompt & load after first use of the key
+
+# nvm plugin settings
+zstyle ':omz:plugins:nvm' lazy yes
+
+# set up autosuggestion
+export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
 # TODO: Replace zplug with a better solution
 # https://www.reddit.com/r/zsh/comments/ak0vgi/a_comparison_of_all_the_zsh_plugin_mangers_i_used/
@@ -131,6 +131,7 @@ zplug "romkatv/powerlevel10k", as:theme, depth:1
 
 # Use oh my zsh defaults because we <3 it!
 local omzLibs=(
+  async_prompt
   clipboard
   compfix
   completion
@@ -148,6 +149,7 @@ local omzLibs=(
   spectrum
   termsupport
   theme-and-appearance
+  vcs_info
 )
 
 for lib in "${omzLibs[@]}"; do
@@ -163,10 +165,11 @@ local omzPlugins=(
   # This is causing some headache, don't install it for now
   # direnv
   fancy-ctrl-z
-  fd
+  fzf
   git-auto-fetch
   kubectl
   man
+  nvm
   ssh-agent
   # TODO: Figure out forwarding of GPG keys
   # gpg-agent
@@ -206,31 +209,11 @@ zplug load
 # TODO: Put this in a custom plugin
 mkdir -p "${ZSH_CACHE_DIR}completions"
 
-if cmdExists direnv; then
-  # supress DIRENV messages for instant prompt, comment the line below for debugging DIRENV
-  export DIRENV_LOG_FORMAT=
-  eval "$(direnv hook zsh)"
-fi
-
-# Because fzf likes to make a file in the home directory, enable it manually here
-if [[ -f ~/.fzf.zsh ]]; then
-  source ~/.fzf.zsh
-
-  if cmdExists fd; then
-    _fzf_compgen_path() {
-      fd --color=always --follow --hidden --exclude ".git" . "$1"
-    }
-
-    _fzf_compgen_dir() {
-      fd --type d --color=always --follow --hidden --exclude ".git" . "$1"
-    }
-
-    export FZF_DEFAULT_COMMAND="fd --type file --color=always --follow --hidden --exclude .git"
-    export FZF_DEFAULT_OPTS="--ansi"
-    export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
-    export FZF_TMUX_OPTS="-p 95%,60%"
-  fi
-fi
+# if cmdExists direnv; then
+#   # supress DIRENV messages for instant prompt, comment the line below for debugging DIRENV
+#   export DIRENV_LOG_FORMAT=
+#   eval "$(direnv hook zsh)"
+# fi
 
 # Enable Asynchronous Mode for suggestions
 export ZSH_AUSOSUGGEST_USE_ASYNC=true
@@ -265,3 +248,10 @@ PERL5LIB="/home/revan/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB
 PERL_LOCAL_LIB_ROOT="/home/revan/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
 PERL_MB_OPT="--install_base \"/home/revan/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/home/revan/perl5"; export PERL_MM_OPT;
+
+# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Added by ProtonUp-Qt on 24-03-2025 20:45:42
+if [ -d "/home/revan/stl/prefix" ]; then export PATH="$PATH:/home/revan/stl/prefix"; fi

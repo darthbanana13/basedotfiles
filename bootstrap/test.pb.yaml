@@ -34,4 +34,3 @@
         msg: 
           - "filtered: {{ asset_list_filtered }}"
           - "result: {{ result }}"
-        

@@ -17,7 +17,7 @@ alias dirs="dirs -v"
 cmdExists lsd && alias ls='lsd'
 
 # Use Mosh instead of SSH
-cmdExists mosh && alias ssh='mosh'
+# cmdExists mosh && alias ssh='mosh'
 
 # For enabling lazy loading of ssh keys
 alias ssh='ssh -o AddKeysToAgent=yes'

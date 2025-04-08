@@ -130,4 +130,4 @@ export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 #for file in vars aliases func; do
 #  [[ ! -f "${HOME}/.shell/${file}.sh" ]] || source "${HOME}/.shell/${file}.sh"
 #done
-. "$HOME/.cargo/env"
+source "$HOME/.cargo/env"

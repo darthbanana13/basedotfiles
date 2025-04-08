@@ -2,5 +2,5 @@
   roles:
     # - mise
     # - neovim
-    - github_install 
+    - github_install
     # - rustup
