@@ -40,26 +40,30 @@ cmdExists btop && alias top='btop'
 # If you don't like the paging behaviour use bat directly
 cmdExists bat && alias cat='bat --paging=never'
 
+# Since we lazy load nvm (node & npm) make sure they're loaded before nvim
+# starts otherwise some plugins (like copilot) will complain
+alias -g editor_cmd="node --version &> /dev/null && ${EDITOR}"
+
 #Edit .zshrc
-alias ez="${EDITOR} ${HOME}/.zshrc"
+alias ez="editor_cmd ${HOME}/.zshrc"
 
 #Edit functions
-alias ef="${EDITOR} ${HOME}/.shell/func.sh"
+alias ef="editor_cmd ${HOME}/.shell/func.sh"
 
 #Edit variables
-alias ev="${EDITOR} ${HOME}/.shell/vars.sh"
+alias ev="editor_cmd ${HOME}/.shell/vars.sh"
 
 #Edit aliases
-alias ea="${EDITOR} ${HOME}/.shell/aliases.sh"
+alias ea="editor_cmd ${HOME}/.shell/aliases.sh"
 
 #Open editor in current directory
-alias e="${EDITOR} ."
+alias e="editor_cmd ."
 
 ##################################Suffix alias######################################
-alias -s go="${EDITOR}"
-alias -s md="${EDITOR}"
-alias -s yaml="${EDITOR}"
-alias -s yml="${EDITOR}"
-alias -s js="${EDITOR}"
-alias -s ts="${EDITOR}"
-alias -s json="${EDITOR}"
+alias -s go="editor_cmd"
+alias -s md="editor_cmd"
+alias -s yaml="editor_cmd"
+alias -s yml="editor_cmd"
+alias -s js="editor_cmd"
+alias -s ts="editor_cmd"
+alias -s json="editor_cmd"

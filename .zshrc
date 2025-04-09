@@ -46,12 +46,6 @@ setopt CORRECT
 # Make sure job control is enabled (default yes for interactive shells)
 setopt monitor
 
-# Set our username so the prompt hides it
-export DEFAULT_USER="$(whoami)"
-
-# Add local bin directories to PATH
-export PATH="${PATH}:${HOME}/.local/bin"
-
 if cmdExists go; then
   export GOPATH="${HOME}/.local/go"
   export GOBIN="${GOPATH}/bin"
@@ -78,18 +72,6 @@ if [[ -d "${HOME}/.poetry/bin" ]]; then
   export PATH="${HOME}/.poetry/bin:${PATH}"
 fi
 
-# Make VIM the default editor
-export EDITOR=vim
-
-# Use Docker BuildKit
-export DOCKER_BUILDKIT=1
-export COMPOSE_DOCKER_CLI_BUILD=1
-
-# Always opt out of the .NET telemetry
-export DOTNET_CLI_TELEMETRY_OPTOUT=1
-
-# fzf config
-export FZF_TMUX_OPTS="-p 95%,60%"
 
 # Set ssh-agent params
 zstyle :omz:plugins:ssh-agent agent-forwarding yes
@@ -99,9 +81,6 @@ zstyle :omz:plugins:ssh-agent lazy yes # prompt & load after first use of the ke
 
 # nvm plugin settings
 zstyle ':omz:plugins:nvm' lazy yes
-
-# set up autosuggestion
-export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
 # TODO: Replace zplug with a better solution
 # https://www.reddit.com/r/zsh/comments/ak0vgi/a_comparison_of_all_the_zsh_plugin_mangers_i_used/
@@ -215,13 +194,6 @@ mkdir -p "${ZSH_CACHE_DIR}completions"
 #   eval "$(direnv hook zsh)"
 # fi
 
-# Enable Asynchronous Mode for suggestions
-export ZSH_AUSOSUGGEST_USE_ASYNC=true
-
-# Override oh-my-zsh history size
-export HISTSIZE=100000
-export SAVEHIST=${HISTSIZE}
-
 # Stop using pushd like a crazy person
 unsetopt auto_pushd
 
@@ -249,9 +221,7 @@ PERL_LOCAL_LIB_ROOT="/home/revan/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_R
 PERL_MB_OPT="--install_base \"/home/revan/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/home/revan/perl5"; export PERL_MM_OPT;
 
-# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# Added by ProtonUp-Qt on 24-03-2025 20:45:42
+# Added by ProtonUp-Qt
 if [ -d "/home/revan/stl/prefix" ]; then export PATH="$PATH:/home/revan/stl/prefix"; fi
