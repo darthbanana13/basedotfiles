@@ -209,6 +209,9 @@ done
 # Set up proxy if in VPN or not
 [[ "${ALWAYS_PROXY_PROBE}" == "true" ]] && proxyProbe
 
+# Setup system specific PATHs
+[[ -n "${PATH_ADD}" ]] && export PATH="${PATH}:${PATH_ADD}"
+
 # Load Angular CLI autocompletion.
 # source <(ng completion script)
 

@@ -41,3 +41,6 @@ export ZSH_AUSOSUGGEST_USE_ASYNC=true
 # Override oh-my-zsh history size
 export HISTSIZE=100000
 export SAVEHIST=${HISTSIZE}
+
+# Add more things to PATH only specific to this specific system
+export PATH_ADD=""
