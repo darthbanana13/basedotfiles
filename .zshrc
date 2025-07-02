@@ -30,13 +30,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# # Node Version manager for managing node versions
-# if [[ -d "${HOME}/.config/nvm" ]]; then
-#   export NVM_DIR="$HOME/.config/nvm"
-#   [[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-#   [[ -s "$NVM_DIR/bash_completion" ]] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-# fi
-
 #if you do a 'rm *', Zsh will give you a sanity check!
 setopt RM_STAR_WAIT
 
@@ -46,41 +39,11 @@ setopt CORRECT
 # Make sure job control is enabled (default yes for interactive shells)
 setopt monitor
 
-if cmdExists go; then
-  export GOPATH="${HOME}/.local/go"
-  export GOBIN="${GOPATH}/bin"
-  export PATH="${PATH}:${GOBIN}"
-  if [[ ! -d "${GOBIN}" ]]; then
-    mkdir -p "${GOBIN}" 
-  fi
-
-  # TODO: Make an associative array and test if all the binaries exist
-  # Install go plugins
-  # for MOD in 'antonmedv/fx@24.0.0' 'andreazorzetto/yh@v0.4.0' 'cpuguy83/go-md2man/v2@v2.0.2'
-  # do
-    # go install "github.com/${MOD}"
-  # done;
-fi
-
-if cmdExists java; then
-  # Get the symlink target from java executable in PATH, then calculate JAVA_HOME
-  # by removing '/bin/java' from the end of the path which readlink gives
-  export JAVA_HOME="$(dirname $(dirname $(readlink -f $(which java))))"
-fi
-
-if [[ -d "${HOME}/.poetry/bin" ]]; then
-  export PATH="${HOME}/.poetry/bin:${PATH}"
-fi
-
-
 # Set ssh-agent params
 zstyle :omz:plugins:ssh-agent agent-forwarding yes
 zstyle :omz:plugins:ssh-agent lifetime 1h
 zstyle :omz:plugins:ssh-agent quiet yes # for Powerlevel10k instant prompt
 zstyle :omz:plugins:ssh-agent lazy yes # prompt & load after first use of the key
-
-# nvm plugin settings
-zstyle ':omz:plugins:nvm' lazy yes
 
 # TODO: Replace zplug with a better solution
 # https://www.reddit.com/r/zsh/comments/ak0vgi/a_comparison_of_all_the_zsh_plugin_mangers_i_used/
@@ -100,13 +63,14 @@ source ~/.zplug/init.zsh
 
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 
-zplug "romkatv/powerlevel10k", as:theme, depth:1
+zplug 'romkatv/powerlevel10k', as:theme, depth:1
 
 # TODO: Figure out a better solution for binaries
-# Can't compile direnv without go
-# if cmdExists go; then
- #  zplug "direnv/direnv", as:command, rename-to:direnv, use:"direnv", at:v2.23.3 hook-build:"make"
-# fi
+# Can't compile the following without go
+if cmdExists go; then
+  #  zplug "direnv/direnv", as:command, rename-to:direnv, use:"direnv", at:v2.23.3 hook-build:"make"
+  # zplug 'junegunn/fzf', depth:1, hook-build:'make'
+fi
 
 # Use oh my zsh defaults because we <3 it!
 local omzLibs=(
@@ -123,7 +87,6 @@ local omzLibs=(
   history
   key-bindings
   misc
-  nvm
   prompt_info_functions
   spectrum
   termsupport
@@ -141,17 +104,15 @@ local omzPlugins=(
   colored-man-pages
   colorize
   command-not-found
-  # This is causing some headache, don't install it for now
-  # direnv
+  # direnv    # This is causing some headache, don't install it for now
   fancy-ctrl-z
+  fnm
   fzf
   git-auto-fetch
   kubectl
   man
-  nvm
   ssh-agent
-  # TODO: Figure out forwarding of GPG keys
-  # gpg-agent
+  # gpg-agent   # TODO: Figure out forwarding of GPG keys
   sudo
   z
   zsh-interactive-cd
@@ -161,7 +122,6 @@ for PLUGIN in "${omzPlugins[@]}"; do
   zplug "plugins/${PLUGIN}", from:oh-my-zsh, depth:1
 done;
 
-zplug 'junegunn/fzf', depth:1, hook-build:'./install --key-bindings --completion --no-update-rc --no-fish'
 
 # Fish shell like autosuggestions
 zplug "zsh-users/zsh-autosuggestions", depth:1
@@ -201,7 +161,7 @@ unsetopt auto_pushd
 [[ "$COLORTERM" == (24bit|truecolor) || "${terminfo[colors]}" -eq '16777216' ]] || zmodload zsh/nearcolor
 
 ##################################Load custom files######################################
-for file in vars aliases func; do
+for file in paths vars aliases func; do
   [[ ! -f "${HOME}/.shell/${file}.sh" ]] || source "${HOME}/.shell/${file}.sh"
 done
 
@@ -212,19 +172,6 @@ done
 # Setup system specific PATHs
 [[ -n "${PATH_ADD}" ]] && export PATH="${PATH}:${PATH_ADD}"
 
-# Load Angular CLI autocompletion.
-# source <(ng completion script)
-
 ##################################Misc######################################
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-export PATH="${PATH}:/home/revan/perl5/bin"
-PERL5LIB="/home/revan/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
-PERL_LOCAL_LIB_ROOT="/home/revan/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
-PERL_MB_OPT="--install_base \"/home/revan/perl5\""; export PERL_MB_OPT;
-PERL_MM_OPT="INSTALL_BASE=/home/revan/perl5"; export PERL_MM_OPT;
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-# Added by ProtonUp-Qt
-if [ -d "/home/revan/stl/prefix" ]; then export PATH="$PATH:/home/revan/stl/prefix"; fi
