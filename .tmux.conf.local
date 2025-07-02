@@ -1,4 +1,4 @@
-# : << EOF
+# : << 'EOF'
 # Oh my tmux!
 # 💛🩷💙🖤❤️🤍
 # https://github.com/gpakosz/.tmux
@@ -415,7 +415,8 @@ bind b choose-window 'break-pane -t :'
 bind-key 's' set-window-option synchronize-panes
 
 # For truecolor
-# set -as terminal-features ",alacritty:RGB,xterm-256color:RGB,gnome*:RGB"
+set-option -g default-terminal 'tmux-256color'
+set-option -sa terminal-features ',alacritty:RGB'
 
 # set Zsh as your default Tmux shell
 # if not then Oh-my-tmux will not prefix the SHELL variable with /
