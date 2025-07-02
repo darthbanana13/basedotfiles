@@ -48,6 +48,7 @@ zstyle :omz:plugins:ssh-agent lazy yes # prompt & load after first use of the ke
 # TODO: Replace zplug with a better solution
 # https://www.reddit.com/r/zsh/comments/ak0vgi/a_comparison_of_all_the_zsh_plugin_mangers_i_used/
 # https://www.reddit.com/r/zsh/comments/1etl9mz/fastest_plugin_manager/
+# Transition to zsh4humans
 # Check if zplug is installed
 if cmdExists gawk; then
   if [[ ! -d ~/.zplug ]]; then
