@@ -19,8 +19,9 @@ export DEFAULT_USER="$(whoami)"
 # Add local bin directories to PATH
 export PATH="${PATH}:${HOME}/.local/bin"
 
-# Make VIM the default editor
-export EDITOR=vim
+# Make Neovim or the lowest common denominator that's aliased or symlinked to
+# the vi command the default editor
+export EDITOR=vi
 
 # Use Docker BuildKit
 export DOCKER_BUILDKIT=1

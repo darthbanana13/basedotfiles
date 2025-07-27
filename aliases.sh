@@ -1,20 +1,37 @@
-# TODO: This needs some work, in case wayland is used
-if cmdExists xclip; then
-  #Copy to clipboard
-  alias xc="xclip -selection c"
-
-  #Paste from clipboard
-  alias xp="xclip -selection clipboard -o"
+if [[ "${XDG_SESSION_TYPE}" == 'wayland' ]]; then
+  if cmdExists wl-copy; then
+    alias cc='wl-copy'
+    alias cp='wl-paste'
+  else
+    alias cc='echo "Please install wl-clipboard for clipboard support in wayland!"'
+    alias cp='echo "Please install wl-clipboard for clipboard support in wayland!"'
+  fi
+elif [[ "${XDG_SESSION_TYPE}" == 'x11' ]]; then
+  if cmdExists xclip; then
+    alias cc='xclip -selection c'
+    alias cp='xclip -selection clipboard -o'
+  else
+    alias cc='echo "Please install xclip for clipboard support in X11!"'
+    alias cp='echo "Please install xclip for clipboard support in X11!"'
+  fi
 elif cmdExists termux-clipboard-get; then 
-  alias xc="termux-clipboard-get"
-  alias xp="termux-clipboard-set"
+  alias cc='termux-clipboard-get'
+  alias cp='termux-clipboard-set'
 fi
 
 # Make the dirs command useful
-alias dirs="dirs -v"
+alias dirs='dirs -v'
 
 # Color ls
 cmdExists lsd && alias ls='lsd'
+
+# Safer rm
+# This should not interfere with your shell scripts, because IMO most of them
+# use either bash or sh. And you should do the same! Make scripts for the
+# least common denominator!
+if cmdExists trash-put; then
+  alias rm='echo "Please use trash-put!"'
+fi
 
 # Use Mosh instead of SSH
 # cmdExists mosh && alias ssh='mosh'
@@ -23,15 +40,24 @@ cmdExists lsd && alias ls='lsd'
 alias ssh='ssh -o AddKeysToAgent=yes'
 
 # Don' make using bash interactively impossible
-alias bash="PERMIT_BASH=true bash"
+alias bash='PERMIT_BASH=true bash'
 
-# Make sure we make an alias from vi & vim to nvim here, because a symlink might not be installed automatically for nvim
-# Update: Usually use update-alternatives for debian based systems. There is an example in the bootstraps folder.
-# Otherwise this will overrider the update-alternatives
-# if cmdExists nvim; then
-#   alias vi=nvim
-#   alias vim=nvim
-# fi
+# Make sure we make an alias from vi & vim to nvim here, because a symlink might
+# not be installed automatically for nvim. Usually use update-alternatives for
+# debian based systems. If not then we'll set up aliases here:
+if [[ ! -L "$(which ${EDITOR})" ]]; then
+  if cmdExits nvim.appimage; then
+    alias vi=nvim.appimage
+    alias vim=nvim.appimage
+    alias nvim=nvim.appimage
+  elif cmdExists nvim; then
+    alias vi=nvim
+    alias vim=nvim
+  elif cmdExists vim; then
+    alias vi=vim
+    alias vim=vim
+  fi
+fi
 
 # Don't see any reason why we should not use a better top utility if it exists
 cmdExists btop && alias top='btop'
@@ -40,30 +66,23 @@ cmdExists btop && alias top='btop'
 # If you don't like the paging behaviour use bat directly
 cmdExists bat && alias cat='bat --paging=never'
 
-# Since we lazy load nvm (node & npm) make sure they're loaded before nvim
-# starts otherwise some plugins (like copilot) will complain
-alias -g editor_cmd="node --version &> /dev/null && ${EDITOR}"
+# Edit shell config
+alias es="${EDITOR} ${HOME}/.zshrc"
+if [[ -L "${HOME}/.zshrc" ]] && cmdExists readlink && cmdExists dirname; then
+  alias es="${EDITOR} $(dirname $(readlink -f ${HOME}/.zshrc))"
+fi
 
-#Edit .zshrc
-alias ez="editor_cmd ${HOME}/.zshrc"
+# Edit variables
+alias ev="${EDITOR} ${HOME}/.shell/vars.sh"
 
-#Edit functions
-alias ef="editor_cmd ${HOME}/.shell/func.sh"
-
-#Edit variables
-alias ev="editor_cmd ${HOME}/.shell/vars.sh"
-
-#Edit aliases
-alias ea="editor_cmd ${HOME}/.shell/aliases.sh"
-
-#Open editor in current directory
-alias e="editor_cmd ."
+# Open editor in current directory
+alias e="${EDITOR} ."
 
 ##################################Suffix alias######################################
-alias -s go="editor_cmd"
-alias -s md="editor_cmd"
-alias -s yaml="editor_cmd"
-alias -s yml="editor_cmd"
-alias -s js="editor_cmd"
-alias -s ts="editor_cmd"
-alias -s json="editor_cmd"
+alias -s go="${EDITOR}"
+alias -s md="${EDITOR}"
+alias -s yaml="${EDITOR}"
+alias -s yml="${EDITOR}"
+alias -s js="${EDITOR}"
+alias -s ts="${EDITOR}"
+alias -s json="${EDITOR}"
