@@ -1,22 +1,22 @@
 if [[ "${XDG_SESSION_TYPE}" == 'wayland' ]]; then
   if cmdExists wl-copy; then
-    alias cc='wl-copy'
-    alias cp='wl-paste'
+    alias tc='wl-copy'
+    alias tp='wl-paste'
   else
-    alias cc='echo "Please install wl-clipboard for clipboard support in wayland!"'
-    alias cp='echo "Please install wl-clipboard for clipboard support in wayland!"'
+    alias tc='echo "Please install wl-clipboard for clipboard support in wayland!"'
+    alias tp='echo "Please install wl-clipboard for clipboard support in wayland!"'
   fi
 elif [[ "${XDG_SESSION_TYPE}" == 'x11' ]]; then
   if cmdExists xclip; then
-    alias cc='xclip -selection c'
-    alias cp='xclip -selection clipboard -o'
+    alias tc='xclip -selection c'
+    alias tp='xclip -selection clipboard -o'
   else
-    alias cc='echo "Please install xclip for clipboard support in X11!"'
-    alias cp='echo "Please install xclip for clipboard support in X11!"'
+    alias tc='echo "Please install xclip for clipboard support in X11!"'
+    alias tp='echo "Please install xclip for clipboard support in X11!"'
   fi
 elif cmdExists termux-clipboard-get; then 
-  alias cc='termux-clipboard-get'
-  alias cp='termux-clipboard-set'
+  alias tc='termux-clipboard-get'
+  alias tp='termux-clipboard-set'
 fi
 
 # Make the dirs command useful
