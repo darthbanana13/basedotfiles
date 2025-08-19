@@ -73,7 +73,7 @@ if [[ -L "${HOME}/.zshrc" ]] && cmdExists readlink && cmdExists dirname; then
 fi
 
 # Edit variables
-alias ev="${EDITOR} ${HOME}/.shell/vars.sh"
+alias ev="${EDITOR} ${XDG_CONFIG_HOME}/zsh/vars.sh"
 
 # Open editor in current directory
 alias e="${EDITOR} ."

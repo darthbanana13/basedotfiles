@@ -143,7 +143,7 @@ mkdir -p "${ZSH_CACHE_DIR}completions"
 
 ##################################Load custom files######################################
 for file in zsh paths vars aliases func; do
-  [[ ! -f "${HOME}/.shell/${file}.sh" ]] || source "${HOME}/.shell/${file}.sh"
+  [[ ! -f "${XDG_CONFIG_HOME}/zsh/${file}.sh" ]] || source "${HOME}/.shell/${file}.sh"
 done
 
 ##################################Custom function Configs######################################
