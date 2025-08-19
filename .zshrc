@@ -30,32 +30,17 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-#if you do a 'rm *', Zsh will give you a sanity check!
-setopt RM_STAR_WAIT
-
-# Zsh has a spelling corrector
-setopt CORRECT
-
-# Make sure job control is enabled (default yes for interactive shells)
-setopt monitor
-
-# Set ssh-agent params
-zstyle :omz:plugins:ssh-agent agent-forwarding yes
-zstyle :omz:plugins:ssh-agent lifetime 1h
-zstyle :omz:plugins:ssh-agent quiet yes # for Powerlevel10k instant prompt
-zstyle :omz:plugins:ssh-agent lazy yes # prompt & load after first use of the key
-
 # TODO: Replace zplug with a better solution
 # https://www.reddit.com/r/zsh/comments/ak0vgi/a_comparison_of_all_the_zsh_plugin_mangers_i_used/
 # https://www.reddit.com/r/zsh/comments/1etl9mz/fastest_plugin_manager/
 # Transition to zsh4humans
 # Check if zplug is installed
-if cmdExists gawk; then
+if cmdExists gawk && cmdExists git; then
   if [[ ! -d ~/.zplug ]]; then
     git clone https://github.com/zplug/zplug ~/.zplug
   fi
 else
-  echo "Please install gawk";
+  echo "Please install gawk & git";
 fi
 
 source ~/.zplug/init.zsh
@@ -65,6 +50,10 @@ source ~/.zplug/init.zsh
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 
 zplug 'romkatv/powerlevel10k', as:theme, depth:1
+#
+# Fish shell like autosuggestions
+zplug "zsh-users/zsh-autosuggestions", depth:1
+zplug "zsh-users/zsh-syntax-highlighting", depth:1
 
 # TODO: Figure out a better solution for binaries
 # Can't compile the following without go
@@ -75,24 +64,24 @@ fi
 
 # Use oh my zsh defaults because we <3 it!
 local omzLibs=(
-  async_prompt
-  clipboard
-  compfix
-  completion
-  correction
-  diagnostics
-  directories
-  functions
-  git
-  grep
-  history
-  key-bindings
-  misc
-  prompt_info_functions
-  spectrum
-  termsupport
-  theme-and-appearance
-  vcs_info
+  'async_prompt'
+  'clipboard'
+  'compfix'
+  'completion'
+  'correction'
+  'diagnostics'
+  'directories'
+  'functions'
+  'git'
+  'grep'
+  'history'
+  'key-bindings'
+  'misc'
+  'prompt_info_functions'
+  'spectrum'
+  'termsupport'
+  'theme-and-appearance'
+  'vcs_info'
 )
 
 for lib in "${omzLibs[@]}"; do
@@ -101,32 +90,26 @@ done;
 
 # Use cool oh my zsh plugins!
 local omzPlugins=(
-  catimg
-  colored-man-pages
-  colorize
-  command-not-found
-  # direnv    # This is causing some headache, don't install it for now
-  fancy-ctrl-z
-  fnm
-  fzf
-  git-auto-fetch
-  kubectl
-  man
-  ssh-agent
-  # gpg-agent   # TODO: Figure out forwarding of GPG keys
-  sudo
-  z
-  zsh-interactive-cd
+  'catimg'
+  'colored-man-pages'
+  'colorize'
+  'command-not-found'
+  # 'direnv'    # This is causing some headache, don't install it for now
+  'fancy-ctrl-z'
+  'fnm'
+  'fzf'
+  'git-auto-fetch'
+  'kubectl'
+  'man'
+  # 'gpg-agent'   # TODO: Figure out forwarding of GPG keys
+  'sudo'
+  'z'
+  'zsh-interactive-cd'
 )
 
 for PLUGIN in "${omzPlugins[@]}"; do
   zplug "plugins/${PLUGIN}", from:oh-my-zsh, depth:1
 done;
-
-
-# Fish shell like autosuggestions
-zplug "zsh-users/zsh-autosuggestions", depth:1
-zplug "zsh-users/zsh-syntax-highlighting", depth:1
 
 ##################################plugins for others######################################
 
@@ -155,20 +138,20 @@ mkdir -p "${ZSH_CACHE_DIR}completions"
 #   eval "$(direnv hook zsh)"
 # fi
 
-# Stop using pushd like a crazy person
-unsetopt auto_pushd
-
 # Only enable this once you have zsh 5.7 or greater
 [[ "$COLORTERM" == (24bit|truecolor) || "${terminfo[colors]}" -eq '16777216' ]] || zmodload zsh/nearcolor
 
 ##################################Load custom files######################################
-for file in paths vars aliases func; do
+for file in zsh paths vars aliases func; do
   [[ ! -f "${HOME}/.shell/${file}.sh" ]] || source "${HOME}/.shell/${file}.sh"
 done
 
 ##################################Custom function Configs######################################
 # Set up proxy if in VPN or not
 [[ "${ALWAYS_PROXY_PROBE}" == "true" ]] && proxyProbe
+
+# Start sshAgent automatically
+[[ "${AUTOSTART_SSH_AGENT}" == "true" ]] && sshAgent
 
 # Setup system specific PATHs
 [[ -n "${PATH_ADD}" ]] && export PATH="${PATH}:${PATH_ADD}"

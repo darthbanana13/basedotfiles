@@ -33,15 +33,7 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1
 # fzf config
 export FZF_TMUX_OPTS="-p 95%,60%"
 
-# set up autosuggestion
-export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
-
-# Enable Asynchronous Mode for suggestions
-export ZSH_AUSOSUGGEST_USE_ASYNC=true
-
-# Override oh-my-zsh history size
-export HISTSIZE=100000
-export SAVEHIST=${HISTSIZE}
-
 # Add more things to PATH only specific to this specific system
-export PATH_ADD=""
+PATH_ADD=""
+
+AUTOSTART_SSH_AGENT="true"
