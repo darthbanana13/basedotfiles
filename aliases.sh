@@ -30,7 +30,7 @@ cmdExists lsd && alias ls='lsd'
 # use either bash or sh. And you should do the same! Make scripts for the
 # least common denominator!
 if cmdExists trash-put; then
-  alias rm='echo "Please use trash-put!"'
+  alias rm='echo "Please use trash-put"'
 fi
 
 # Use Mosh instead of SSH
