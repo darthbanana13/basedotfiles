@@ -59,6 +59,9 @@ if [[ ! -L "$(which ${EDITOR})" ]]; then
   fi
 fi
 
+# Edit neovim config
+[[ -d "${XDG_CONFIG_HOME}/nvim" ]] && alias en="${EDITOR} ${XDG_CONFIG_HOME}/nvim"
+
 # Don't see any reason why we should not use a better top utility if it exists
 cmdExists btop && alias top='btop'
 
