@@ -19,32 +19,24 @@ elif cmdExists termux-clipboard-get; then
   alias tp='termux-clipboard-set'
 fi
 
-# Make the dirs command useful
-alias dirs='dirs -v'
+alias dirs='dirs -v' # Make the dirs command useful
 
-# Color ls
-cmdExists lsd && alias ls='lsd'
+cmdExists lsd && alias ls='lsd' # Color ls
 
-# Safer rm
+# Safer rm, got burned too many times by undoable rm
 # This should not interfere with your shell scripts, because IMO most of them
-# use either bash or sh. And you should do the same! Make scripts for the
-# least common denominator!
+# use either bash or sh.
 if cmdExists trash-put; then
   alias rm='echo "Please use trash-put"'
 fi
 
-# Use Mosh instead of SSH
-# cmdExists mosh && alias ssh='mosh'
+alias ssh='ssh -o AddKeysToAgent=yes' # For enabling lazy loading of ssh keys
 
-# For enabling lazy loading of ssh keys
-alias ssh='ssh -o AddKeysToAgent=yes'
-
-# Make using bash interactively possible
-alias bash='PERMIT_BASH=true bash'
+alias bash='PERMIT_BASH=true bash' # Make using bash interactively possible
 
 # Make sure we make an alias from vi & vim to nvim here, because a symlink might
-# not be installed automatically for nvim. Usually use update-alternatives for
-# debian based systems. If not then we'll set up aliases here:
+# not be installed automatically for nvim. Use update-alternatives for debian
+# based systems. If unable then we'll set up aliases here:
 if [[ ! -L "$(which ${EDITOR})" ]]; then
   if cmdExits nvim.appimage; then
     alias vi=nvim.appimage
@@ -62,7 +54,7 @@ fi
 # Edit neovim config
 [[ -d "${XDG_CONFIG_HOME}/nvim" ]] && alias en="${EDITOR} ${XDG_CONFIG_HOME}/nvim"
 
-# Don't see any reason why we should not use a better top utility if it exists
+# Use a better top utility if it exists
 cmdExists btop && alias top='btop'
 
 # Use cat on steroids if it exists, and don't page, like cat does

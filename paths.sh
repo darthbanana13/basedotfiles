@@ -6,7 +6,7 @@ if cmdExists go; then
     mkdir -p "${GOBIN}" 
   fi
 
-  # TODO: Make an associative array and test if all the binaries exist
+  # TODO: Handle all these binaries with bootstrap
   # Install go plugins
   # for MOD in 'antonmedv/fx@24.0.0' 'andreazorzetto/yh@v0.4.0' 'cpuguy83/go-md2man/v2@v2.0.2'
   # do
@@ -15,16 +15,10 @@ if cmdExists go; then
 fi
 
 if cmdExists fzf; then
-  # eval <(fzf --zsh) # There are some issues with this, which are not related to
-  #   upstream so we're going to use a cache
-  if [[ -f "${XDG_CONFIG_HOME}/fzf.zsh" ]]; then
-    source "${XDG_CONFIG_HOME}/fzf.zsh"
-  else
-    echo "Warning: fzf.zsh not found in ${XDG_CONFIG_HOME}. Please run 'fzf --zsh' to generate it."
-  fi
+  source <(fzf --zsh)
 fi
 
-# Export luarocks vars for lua
+# Export luarocks vars for lua, needed for neovim
 if cmdExists luarocks; then
   eval $(luarocks path --bin)
 fi

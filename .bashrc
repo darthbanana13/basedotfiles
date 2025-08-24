@@ -8,12 +8,14 @@ case $- in
       *) return;;
 esac
 
+##################################load zsh######################################
 ZSH_PATH="$(which zsh)"
 if [[ -n "${ZSH_PATH}" ]] && [[ "${PERMIT_BASH}" != true ]] && shopt -q login_shell; then
     export SHELL="${ZSH_PATH}"
     exec ${SHELL} -l
 fi
 
+##################################default ubuntu .bashrc######################################
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
@@ -22,8 +24,8 @@ HISTCONTROL=ignoreboth
 shopt -s histappend
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=100000
-HISTFILESIZE=200000
+HISTSIZE=1000
+HISTFILESIZE=2000
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -105,7 +107,10 @@ if ! shopt -oq posix; then
   fi
 fi
 
-#Customizations
+##################################Customizations######################################
+#TODO: Transition to oh-my-bash
+HISTSIZE=10000000
+HISTFILESIZE=20000000
 
 export AG_NO_HIST="false"
 export THEME=$HOME/.bash/themes/agnoster-bash/agnoster.bash
@@ -113,21 +118,7 @@ if [[ ! -f $THEME ]]; then
     mkdir -p $HOME/.bash/themes/agnoster-bash
     git clone https://github.com/speedenator/agnoster-bash.git $HOME/.bash/themes/agnoster-bash 
 fi
-export DEFAULT_USER=`whoami`
+export DEFAULT_USER=$(whoami)
 source $THEME
 
-export PATH=$PATH:~/.local/bin:/opt/mssql-tools/bin
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-
-export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
-
-# TODO: Better unify the settings for bash & zsh
-##################################Load custom files######################################
-#for file in vars aliases func; do
-#  [[ ! -f "${HOME}/.shell/${file}.sh" ]] || source "${HOME}/.shell/${file}.sh"
-#done
-source "$HOME/.cargo/env"
+eval "$(fzf --bash)"

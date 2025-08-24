@@ -1,6 +1,6 @@
 # .zshrc
 
-# If not chsh to zsh make sure the SHELL value is sane
+# If not using chsh, then make sure SHELL value is sane
 export SHELL="$(which zsh)"
 
 # Set XDG Base directory specificatins
@@ -16,9 +16,6 @@ cmdExists() {
   command -v $1 &> /dev/null
 }
 
-# In case this fails: https://stackoverflow.com/a/48877084
-# sudo ln -sf /usr/share/terminfo/x/xterm-color /usr/share/terminfo/x/xterm-256color
-# or follow the terminfo steps for alacritty
 if cmdExists tmux && [[ -z "${TMUX}" ]]; then
    tmux attach 2> /dev/null || tmux
 fi
@@ -55,13 +52,6 @@ zplug 'romkatv/powerlevel10k', as:theme, depth:1
 zplug "zsh-users/zsh-autosuggestions", depth:1
 zplug "zsh-users/zsh-syntax-highlighting", depth:1
 
-# TODO: Figure out a better solution for binaries
-# Can't compile the following without go
-if cmdExists go; then
-  #  zplug "direnv/direnv", as:command, rename-to:direnv, use:"direnv", at:v2.23.3 hook-build:"make"
-  # zplug 'junegunn/fzf', depth:1, hook-build:'make'
-fi
-
 # Use oh my zsh defaults because we <3 it!
 local omzLibs=(
   'async_prompt'
@@ -94,7 +84,6 @@ local omzPlugins=(
   'colored-man-pages'
   'colorize'
   'command-not-found'
-  # 'direnv'    # This is causing some headache, don't install it for now
   'fancy-ctrl-z'
   'fnm'
   'fzf'
@@ -131,12 +120,6 @@ zplug load
 # Can't do this before zplug load because $ZSH & ZSH_CACHE_DIR is exported after load
 # TODO: Put this in a custom plugin
 mkdir -p "${ZSH_CACHE_DIR}completions"
-
-# if cmdExists direnv; then
-#   # supress DIRENV messages for instant prompt, comment the line below for debugging DIRENV
-#   export DIRENV_LOG_FORMAT=
-#   eval "$(direnv hook zsh)"
-# fi
 
 # Only enable this once you have zsh 5.7 or greater
 [[ "$COLORTERM" == (24bit|truecolor) || "${terminfo[colors]}" -eq '16777216' ]] || zmodload zsh/nearcolor
