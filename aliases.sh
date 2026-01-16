@@ -4,7 +4,7 @@ if [[ "${XDG_SESSION_TYPE}" == 'wayland' ]]; then
     alias tp='wl-paste'
   else
     alias tc='echo "Please install wl-clipboard for clipboard support in wayland!"'
-    alias tp='echo "Please install wl-clipboard for clipboard support in wayland!"'
+    alias tp="${tc}"
   fi
 elif [[ "${XDG_SESSION_TYPE}" == 'x11' ]]; then
   if cmdExists xclip; then
@@ -12,7 +12,7 @@ elif [[ "${XDG_SESSION_TYPE}" == 'x11' ]]; then
     alias tp='xclip -selection clipboard -o'
   else
     alias tc='echo "Please install xclip for clipboard support in X11!"'
-    alias tp='echo "Please install xclip for clipboard support in X11!"'
+    alias tp="${tc}"
   fi
 elif cmdExists termux-clipboard-get; then 
   alias tc='termux-clipboard-get'
@@ -59,7 +59,8 @@ cmdExists btop && alias top='btop'
 
 # Use cat on steroids if it exists, and don't page, like cat does
 # If you don't like the paging behaviour use bat directly
-cmdExists bat && alias cat='bat --paging=never'
+# TODO: Try papercolor theme
+cmdExists bat && alias cat='bat --paging=never --style=plain'
 
 # Edit shell config
 alias es="${EDITOR} ${HOME}/.zshrc"

@@ -29,6 +29,25 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1 # Always opt out of the .NET telemetry
 
 export FZF_TMUX_OPTS="-p 95%,60%" # fzf config
 
+# TODO: tc does not work since aliases are setup later
+# Consider adding config files per plugin/utility like oh-my-zsh
+# CTRL-Y to copy the command into clipboard
+# export FZF_CTRL_R_OPTS="
+#   --bind 'ctrl-y:execute-silent(echo -n {2..} | tc)+abort'
+#   --color header:italic
+#   --header 'Press CTRL-Y to copy command into clipboard'"
+
+# Print tree structure in the preview window
+export FZF_ALT_C_OPTS="
+  --walker-skip .git,node_modules,target,nas,.steam,.cache,snap,.cpan
+  --preview 'tree -C {}'"
+
+# Preview file content using bat
+export FZF_CTRL_T_OPTS="
+  --walker-skip .git,node_modules,target,nas,.steam,.cache,.cpan
+  --preview 'bat -n --color=always {}'
+  --bind 'ctrl-/:change-preview-window(down|hidden|)'"
+
 # Add more things to PATH only specific to this system (not shared with other computers)
 PATH_ADD=""
 
