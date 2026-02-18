@@ -3,7 +3,7 @@
 # If not using chsh, then make sure SHELL value is sane
 export SHELL="$(which zsh)"
 
-# Set XDG Base directory specificatins
+# Set XDG Base directory specifications
 export XDG_CONFIG_HOME="${HOME}/.config"
 export XDG_CACHE_HOME="${HOME}/.cache"
 export XDG_DATA_HOME="${HOME}/.local/share"
