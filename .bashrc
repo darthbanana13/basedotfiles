@@ -10,7 +10,7 @@ esac
 
 ##################################load zsh######################################
 ZSH_PATH="$(which zsh)"
-if [[ -n "${ZSH_PATH}" ]] && [[ "${PERMIT_BASH}" != true ]] && shopt -q login_shell; then
+if [[ -n "${ZSH_PATH}" ]] && [[ "${ALLOW_BASH}" != true ]] && shopt -q login_shell; then
     export SHELL="${ZSH_PATH}"
     exec ${SHELL} -l
 fi

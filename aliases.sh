@@ -32,8 +32,6 @@ fi
 
 alias ssh='ssh -o AddKeysToAgent=yes' # For enabling lazy loading of ssh keys
 
-alias bash='PERMIT_BASH=true bash' # Make using bash interactively possible
-
 # Make sure we make an alias from vi & vim to nvim here, because a symlink might
 # not be installed automatically for nvim. Use update-alternatives for debian
 # based systems. If unable then we'll set up aliases here:

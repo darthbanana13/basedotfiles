@@ -5,6 +5,8 @@ export NOPROXY=""
 export NO_PROXY_DNS=""
 export PROXY_DNS=""
 
+export ALLOW_BASH="true"
+
 export ALWAYS_PROXY_PROBE=""
 
 export K3S_KUBECONFIG_MODE="644"
